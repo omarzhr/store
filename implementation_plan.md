@@ -66,25 +66,25 @@ interface MockHeroSection {
 ```
 
 **Features**:
-- [ ] Hero section with background image and CTA
-- [ ] Featured products grid (2 cols mobile, 3-4 desktop)
-- [ ] Category navigation chips (horizontal scroll mobile)
-- [ ] Promotional banner slots
-- [ ] Newsletter signup section
-- [ ] Mobile-first responsive layout
+- [x] Hero section with background image and CTA
+- [x] Featured products grid (2 cols mobile, 3-4 desktop)
+- [x] Category navigation chips (horizontal scroll mobile)
+- [x] Promotional banner slots
+- [x] Newsletter signup section
+- [x] Mobile-first responsive layout
 
 **Components (in same file)**:
-- [ ] HeroSection component
-- [ ] ProductCard component (2 variants: compact, detailed)
-- [ ] CategoryChips component
-- [ ] PromoBanner component
-- [ ] NewsletterSignup component
+- [x] HeroSection component
+- [x] ProductCard component (2 variants: compact, detailed)
+- [x] CategoryChips component
+- [x] PromoBanner component
+- [x] NewsletterSignup component
 
 **Acceptance**: 
-- [ ] Mobile-responsive layout with proper touch targets
-- [ ] Mock products display with proper image aspect ratios
-- [ ] Navigation to products page works
-- [ ] All interactive elements have proper hover/active states
+- [x] Mobile-responsive layout with proper touch targets
+- [x] Mock products display with proper image aspect ratios
+- [x] Navigation to products page works
+- [x] All interactive elements have proper hover/active states
 
 ### Route 1.2: Products Listing (/products)
 **Purpose**: Filterable, sortable product catalog with search
@@ -108,28 +108,27 @@ interface MockCategory {
 ```
 
 **Features**:
-- [ ] Product grid with skeleton loading states
-- [ ] Sort dropdown (price, name, newest - functional with mock data)
-- [ ] Filter drawer (categories, price range, availability)
-- [ ] Search functionality with debounced input
-- [ ] Pagination with page numbers
-- [ ] Empty state when no products found
-- [ ] Mobile filter drawer with apply/clear actions
+- [x] Product grid with skeleton loading states
+- [x] Infinite scroll loading (instead of pagination)
+- [x] Sort dropdown (price, name, newest - functional with mock data)
+- [x] Filter drawer (categories, price range, availability)
+- [x] Search functionality with debounced input
+- [x] Empty state when no products found
+- [x] Mobile filter drawer with apply/clear actions
 
 **Components (in same file)**:
-- [ ] ProductGrid component
-- [ ] FilterDrawer component
-- [ ] SortDropdown component
-- [ ] SearchInput component
-- [ ] Pagination component
-- [ ] EmptyState component
+- [x] ProductGrid component
+- [x] SortDropdown component
+- [x] FilterDrawer component
+- [x] SearchInput component
+- [x] EmptyState component
 
 **Acceptance**:
-- [ ] Grid responsive with proper spacing
-- [ ] Filter drawer opens/closes smoothly on mobile
-- [ ] Sort actually reorders mock products
-- [ ] Search filters products by name/description
-- [ ] Pagination works with mock data sets
+- [x] Grid responsive with proper spacing
+- [x] Infinite scroll works smoothly on mobile and desktop
+- [x] Sort actually reorders mock products
+- [x] Filter drawer opens/closes smoothly on mobile
+- [x] Search filters products by name/description
 
 ### Route 1.3: Product Detail (/products/$productSlug)
 **Purpose**: Individual product page with variants, gallery, add to cart

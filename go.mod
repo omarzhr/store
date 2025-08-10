@@ -1,6 +1,6 @@
 module store.com
 
-go 1.24.6
+go 1.23.1
 
 require github.com/pocketbase/pocketbase v0.29.2
 
