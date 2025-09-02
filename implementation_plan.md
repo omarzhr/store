@@ -38,7 +38,7 @@ Status: Planning document (no code implementation here)
 ### Route 1.1: Home Page (/)
 **Purpose**: Landing page with hero, featured products, customizable sections
 **Files to create**:
-- [ ] `/src/routes/index.tsx` (component + loader)
+- [x] `/src/routes/index.tsx` (component + loader)
 
 **Mock Data Structure**:
 ```typescript
@@ -89,7 +89,7 @@ interface MockHeroSection {
 ### Route 1.2: Products Listing (/products)
 **Purpose**: Filterable, sortable product catalog with search
 **Files to create**:
-- [ ] `/src/routes/products/index.tsx` (component + loader)
+- [x] `/src/routes/products/index.tsx` (component + loader)
 
 **Mock Data Extensions**:
 ```typescript
@@ -242,9 +242,9 @@ interface MockCartSummary {
 ### Route 1.5: Checkout (/checkout)
 **Purpose**: Multi-step checkout process for COD orders
 **Files to create**:
-- [ ] `/src/routes/(public)/checkout/index.tsx` (component + loader)
+- [x] `/src/routes/(public)/checkout/index.tsx` (component + loader)
 
-**Status**: 🚧 READY TO IMPLEMENT
+**Status**: ✅ COMPLETE
 
 **Mock Checkout Data**:
 ```typescript
@@ -304,12 +304,14 @@ interface MockShippingOption {
 - [x] Form validation prevents progression with errors
 - [x] Mobile forms are thumb-friendly with proper input types
 - [x] COD terms are clear and prominent
-- [ ] Order summary updates with shipping selection
+- [x] Order summary updates with shipping selection
 
 ### Route 1.6: Order Confirmation (/order-confirmation/$orderId)
 **Purpose**: Success page after order placement with COD instructions
 **Files to create**:
-- [ ] `/src/routes/order-confirmation/$orderId.tsx` (component + loader)
+- [x] `/src/routes/(public)/order-confirmation/$orderId.tsx` (component + loader)
+
+**Status**: ✅ COMPLETE
 
 **Mock Order Data**:
 ```typescript
@@ -328,56 +330,40 @@ interface MockOrder {
 ```
 
 **Features**:
-- [ ] Order details summary with order number
-- [ ] COD payment instructions with amount
-- [ ] Estimated delivery date
-- [ ] Customer and shipping information
-- [ ] Order items list
-- [ ] Download receipt button (mock PDF)
-- [ ] Track order button (future)
-- [ ] Continue shopping CTA
-- [ ] Support contact information
+- [x] Order details summary with order number
+- [x] COD payment instructions with amount
+- [x] Estimated delivery date
+- [x] Customer and shipping information
+- [x] Order items list
+- [x] Download receipt button (mock PDF)
+- [x] Track order button (future)
+- [x] Continue shopping CTA
+- [x] Support contact information
 
 **Components (in same file)**:
-- [ ] OrderHeader component
-- [ ] CODInstructions component
-- [ ] OrderItemsList component
-- [ ] DeliveryInfo component
-- [ ] SupportContact component
-- [ ] DownloadReceipt component
+- [x] OrderHeader component
+- [x] CODInstructions component
+- [x] OrderItemsList component
+- [x] DeliveryInfo component
+- [x] SupportContact component
+- [x] DownloadReceipt component
 
 **Acceptance**:
-- [ ] Order details display correctly from mock data
-- [ ] COD instructions are prominent and clear
-- [ ] Customer can easily find support contact
-- [ ] Mobile layout prioritizes key information
-- [ ] Clear next steps for customer
+- [x] Order details display correctly from mock data
+- [x] COD instructions are prominent and clear
+- [x] Customer can easily find support contact
+- [x] Mobile layout prioritizes key information
+- [x] Clear next steps for customer
 
-### Route 1.7: Search Results (/search)
-**Purpose**: Global search results page
-**Files to create**:
-- [ ] `/src/routes/search/index.tsx` (component + loader)
-
-**Features**:
-- [ ] Search results grid (same as products)
-- [ ] Search query highlighting in results
-- [ ] Filter by category within search results
-- [ ] Sort search results
-- [ ] No results state with suggestions
-- [ ] Recent searches (localStorage)
-
-**Components (reuse from products page)**:
-- [ ] SearchResults component
-- [ ] NoResults component
-
----
 
 ## PHASE 2: DASHBOARD ROUTES (MOCK DATA)
 
 ### Route 2.1: Dashboard Layout (/dashboard)
 **Purpose**: Protected layout for store owner with navigation
 **Files to create**:
-- [ ] `/src/routes/dashboard.tsx` (layout component)
+- [x] `/src/routes/(protected)/dashboard/route.tsx` (layout component)
+
+**Status**: 🚧 IN PROGRESS
 
 **Mock Auth**:
 ```typescript
@@ -392,29 +378,32 @@ interface MockUser {
 ```
 
 **Features**:
-- [ ] Sidebar navigation with icons (collapsible on desktop)
-- [ ] Mobile drawer navigation with overlay
-- [ ] Top header with user menu and notifications
-- [ ] Breadcrumbs for nested routes
-- [ ] Theme toggle (light/dark)
-- [ ] Mock logout functionality
+- [x] Sidebar navigation with icons (collapsible on desktop)
+- [x] Mobile drawer navigation with overlay
+- [x] Top header with user menu and notifications
+- [x] Breadcrumbs for nested routes
+- [x] Theme toggle (light/dark)
+- [x] Mock logout functionality
 
 **Components (in same file)**:
-- [ ] DashboardSidebar component
-- [ ] MobileNav component
-- [ ] UserMenu component
-- [ ] NotificationBell component
-- [ ] ThemeToggle component
+- [x] DashboardSidebar component
+- [x] MobileNav component
+- [x] UserMenu component
+- [x] NotificationBell component
+- [x] Breadcrumbs component
+- [x] ThemeToggle component
 
 **Auth Protection**:
-- [ ] Mock authentication check in loader
-- [ ] Redirect to login if not authenticated
-- [ ] Role-based access (store owner only)
+- [x] Mock authentication check in loader
+- [x] Redirect to login if not authenticated
+- [x] Role-based access (store owner only)
 
 ### Route 2.2: Dashboard Overview (/dashboard/index)
 **Purpose**: Key metrics and quick actions dashboard
 **Files to create**:
-- [ ] `/src/routes/dashboard/index.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/index.tsx` (component + loader)
+
+**Status**: ✅ COMPLETE
 
 **Mock Analytics Data**:
 ```typescript
@@ -439,26 +428,26 @@ interface MockRecentOrder {
 ```
 
 **Features**:
-- [ ] KPI cards with icons and trend indicators
-- [ ] Recent orders table with quick actions
-- [ ] Low stock alerts
-- [ ] Quick action buttons (add product, view orders)
-- [ ] Revenue chart (simple mock chart)
-- [ ] Top selling products list
+- [x] KPI cards with icons and trend indicators
+- [x] Recent orders table with quick actions
+- [x] Low stock alerts
+- [x] Quick action buttons (add product, view orders)
+- [x] Revenue chart (simple mock chart)
+- [x] Top selling products list
 
 **Components (in same file)**:
-- [ ] StatsCard component
-- [ ] RecentOrdersTable component
-- [ ] QuickActions component
-- [ ] LowStockAlert component
-- [ ] TopProducts component
+- [x] StatsCard component
+- [x] RecentOrdersTable component
+- [x] QuickActions component
+- [x] LowStockAlert component
+- [x] TopProducts component
 
 ### Route 2.3: Products Management (/dashboard/products)
 **Purpose**: Complete product CRUD interface
 **Files to create**:
-- [ ] `/src/routes/dashboard/products/index.tsx` (component + loader)
-- [ ] `/src/routes/dashboard/products/new.tsx` (component + loader)
-- [ ] `/src/routes/dashboard/products/$productId/edit.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/products/index.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/products/new.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/products/$productId/edit.tsx` (component + loader)
 
 **Mock Product Management Data**:
 ```typescript
@@ -475,28 +464,28 @@ interface MockProductManagement extends MockProduct {
 ```
 
 **Features**:
-- [ ] Product list table with search and filters
-- [ ] Bulk actions (delete, toggle status, export)
-- [ ] Add new product form with image upload
-- [ ] Edit product with inline editing capabilities
-- [ ] Stock management with low stock warnings
+- [x] Product list table with search and filters
+- [x] Bulk actions (delete, toggle status, export)
+- [x] Add new product form with image upload
+- [x] Edit product with dedicated form page
+- [x] Stock management with low stock warnings
 - [ ] Product status toggle (active/inactive)
 - [ ] Category management
 - [ ] Duplicate product functionality
 
 **Components (in same file per route)**:
-- [ ] ProductsTable component
-- [ ] BulkActions component
-- [ ] ProductForm component
-- [ ] ImageUpload component
+- [x] ProductsTable component
+- [x] BulkActions component
+- [x] ProductForm component
+- [x] ImageUpload component
 - [ ] StockControls component
 - [ ] CategorySelector component
 
 ### Route 2.4: Orders Management (/dashboard/orders)
 **Purpose**: View and manage all customer orders
 **Files to create**:
-- [ ] `/src/routes/dashboard/orders/index.tsx` (component + loader)
-- [ ] `/src/routes/dashboard/orders/$orderId.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/orders/index.tsx` (component + loader)
+- [ ] `/src/routes/(protected)/dashboard/_dashboard/orders/$orderId.tsx` (component + loader)
 
 **Mock Order Management Data**:
 ```typescript
@@ -506,32 +495,33 @@ interface MockOrderManagement extends MockOrder {
   notes: string;
   internalNotes: string;
   assignedTo?: string;
+  statusHistory: { status: string; updatedAt: string }[];
 }
 ```
 
 **Features**:
-- [ ] Orders table with status filters and search
-- [ ] Order status updates with history tracking
-- [ ] COD confirmation workflow
-- [ ] Print shipping labels (mock)
-- [ ] Order timeline view
-- [ ] Customer communication log
-- [ ] Bulk status updates
-- [ ] Export orders to CSV
+- [x] Orders table with status filters and search
+- [x] Order status updates with history tracking
+- [x] COD confirmation workflow
+- [x] Print shipping labels (mock)
+- [x] Order timeline view
+- [x] Customer communication log
+- [x] Bulk status updates
+- [x] Export orders to CSV
 
 **Components (in same file per route)**:
-- [ ] OrdersTable component
-- [ ] StatusFilter component
-- [ ] OrderDetail component
-- [ ] StatusUpdateForm component
-- [ ] OrderTimeline component
-- [ ] PrintLabel component
+- [x] OrdersTable component
+- [x] StatusFilter component
+- [x] OrderDetail component
+- [x] StatusUpdateForm component
+- [x] OrderTimeline component
+- [x] PrintLabel component
 
 ### Route 2.5: Customers Management (/dashboard/customers)
 **Purpose**: Customer database and communication
 **Files to create**:
-- [ ] `/src/routes/dashboard/customers/index.tsx` (component + loader)
-- [ ] `/src/routes/dashboard/customers/$customerId.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/customers/index.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/customers/$customerId.tsx` (component + loader)
 
 **Mock Customer Data**:
 ```typescript
@@ -552,24 +542,24 @@ interface MockCustomer {
 ```
 
 **Features**:
-- [ ] Customer list with search and filters
-- [ ] Customer profiles with order history
-- [ ] Communication log and notes
-- [ ] Customer segmentation
-- [ ] Export customer data
-- [ ] Block/unblock customers
+- [x] Customer list with search and filters
+- [x] Customer profiles with order history
+- [x] Communication log and notes
+- [x] Customer segmentation
+- [x] Export customer data
+- [x] Block/unblock customers
 
 **Components (in same file per route)**:
-- [ ] CustomersTable component
-- [ ] CustomerProfile component
-- [ ] OrderHistory component
-- [ ] CustomerNotes component
-- [ ] AddressBook component
+- [x] CustomersTable component
+- [x] CustomerProfile component
+- [x] OrderHistory component
+- [x] CustomerNotes component
+- [x] AddressBook component
 
 ### Route 2.6: Analytics & Reports (/dashboard/analytics)
 **Purpose**: Sales analytics and business intelligence
 **Files to create**:
-- [ ] `/src/routes/dashboard/analytics/index.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/analytics/index.tsx` (component + loader)
 
 **Mock Analytics Data**:
 ```typescript
@@ -582,23 +572,26 @@ interface MockAnalytics {
 ```
 
 **Features**:
-- [ ] Revenue charts (daily, weekly, monthly)
-- [ ] Top selling products
-- [ ] Customer acquisition metrics
-- [ ] COD vs other payment analysis
-- [ ] Geographic sales distribution
-- [ ] Export reports
+- [x] Revenue charts (daily, weekly, monthly)
+- [x] Top selling products
+- [x] Customer acquisition metrics
+- [x] COD vs other payment analysis
+- [x] Geographic sales distribution
+- [x] Export reports
 
 **Components (in same file)**:
-- [ ] RevenueChart component
-- [ ] TopProductsChart component
-- [ ] CustomerMetrics component
-- [ ] GeographicMap component
+- [x] RevenueChart component
+- [x] TopProductsChart component
+- [x] CustomerAcquisitionChart component
+- [x] PaymentAnalysisChart component
+- [x] GeographicMap component
+- [x] ExportReportsButton component
 
 ### Route 2.7: Settings (/dashboard/settings)
 **Purpose**: Store configuration and preferences
 **Files to create**:
-- [ ] `/src/routes/dashboard/settings/index.tsx` (component + loader)
+- [x] `/src/routes/(protected)/dashboard/_dashboard/settings/index.tsx` (component + loader)
+- [ ] `/src/routes/(protected)/dashboard/_dashboard/settings/checkout.tsx` (component + loader)
 
 **Mock Settings Data**:
 ```typescript
@@ -609,39 +602,129 @@ interface MockStoreSettings {
   currency: string;
   timezone: string;
   shippingZones: MockShippingOption[];
-  codSettings: {
+  codSettings?: {
     enabled: boolean;
     maxOrderValue: number;
     confirmationRequired: boolean;
   };
-  notifications: {
+  notifications?: {
     newOrders: boolean;
     lowStock: boolean;
     customerMessages: boolean;
+  };
+  taxRate?: number;
+  checkoutSettings?: {
+    fields: {
+      phoneRequired: boolean;
+      companyNameEnabled: boolean;
+      customFields: string[];
+    };
+    appearance: {
+      primaryColor: string;
+      buttonText: string;
+      submitButtonText: string;
+    };
+    features: {
+      guestCheckoutEnabled: boolean;
+      showOrderSummary: boolean;
+      enableCouponCodes: boolean;
+    };
+    messages: {
+      thankYouMessage: string;
+      processingMessage: string;
+    };
+    steps: {
+      enabledSteps: string[];
+      stepOrder: string[];
+    };
   };
 }
 ```
 
 **Features**:
-- [ ] Store information form
-- [ ] Shipping zones configuration
-- [ ] COD settings management
-- [ ] Notification preferences
-- [ ] Tax settings
-- [ ] Logo upload
+- [x] Store information form
+- [x] Shipping zones configuration
+- [x] COD settings management
+- [x] Notification preferences
+- [x] Tax settings
+- [x] Logo upload
+- [ ] **Checkout Page Settings**
+- [ ] Add/remove checkout fields configuration
+- [ ] Customize button text and colors
+- [ ] Enable/disable guest checkout
+- [ ] Add custom thank-you message
+- [ ] Reorder checkout steps
+
+**Components (in same file per route)**:
+- [x] StoreInfoForm component
+- [x] ShippingZones component
+- [x] CODSettings component
+- [x] NotificationSettings component
+- [x] TaxSettings component
+- [x] LogoUpload component
+- [ ] CheckoutFieldsSettings component
+- [ ] CheckoutAppearanceSettings component
+- [ ] CheckoutFeaturesSettings component
+- [ ] CheckoutMessagesSettings component
+- [ ] CheckoutStepsSettings component
+
+### Route 2.7.1: Home Page Settings (/dashboard/settings/home)
+**Purpose**: Comprehensive home page and header management interface
+**Files to create**:
+- [x] `/src/routes/(protected)/dashboard/_dashboard/settings/home.tsx` (component + loader)
+
+**Status**: ✅ COMPLETE
+
+**Integration Complete:**
+- [x] Header reflects store settings (logo, search visibility, wishlist visibility, style)
+- [x] Home page uses dynamic content from dashboard settings
+- [x] Hero background image upload and display
+- [x] Real-time preview functionality
+- [x] All sections can be enabled/disabled from dashboard
+- [x] Settings persist and update immediately on website
+
+**Features**:
+- [x] Header configuration (store name, logo, navigation options)
+- [x] Hero section management (title, subtitle, CTA, background image)
+- [x] Categories section control (visibility, layout, title)
+- [x] Featured products settings (enable/disable, count, sorting)
+- [x] Promotional banners management (add/remove/edit banners)
+- [x] Newsletter section customization
+- [x] Real-time preview of changes
+- [x] File uploads for logo and hero background
+- [x] Mobile-responsive interface
 
 **Components (in same file)**:
-- [ ] StoreInfoForm component
-- [ ] ShippingZones component
-- [ ] CODSettings component
-- [ ] NotificationSettings component
+- [x] HeaderConfigSection component
+- [x] HeroSettingsSection component
+- [x] CategoriesSettingsSection component
+- [x] FeaturedProductsSection component
+- [x] PromoBannersManager component
+- [x] NewsletterSettingsSection component
+
+**Data Structure Updates**:
+- [x] Extended `StoresRecord.checkoutSettings` to include home page configuration
+- [x] Header settings (showSearch, showWishlist, style)
+- [x] Hero section settings (enabled, title, subtitle, ctaText, backgroundImage)
+- [x] Categories configuration (enabled, title, layout, visibleCategories)
+- [x] Featured products settings (enabled, title, limit, sortBy)
+- [x] Promo banners array with individual banner controls
+- [x] Newsletter customization options
+
+**Acceptance**:
+- [x] Store owners can customize all home page sections
+- [x] Header navigation and branding can be configured
+- [x] Image uploads work for logo and hero background
+- [x] Settings are saved to PocketBase and reflected on frontend
+- [x] Mobile-first responsive design with tabbed interface
+- [x] Real-time validation and error handling
+- [x] Integration with existing store settings
 
 ---
 
 ## PHASE 3: BACKEND INTEGRATION (POCKETBASE)
 
-### 3.1: Database Schema Setup
-**Files to update**:
+  **Files to update**:
 - [ ] `./src/lib/types.ts` (replace mock types with real PocketBase types)
 
 **PocketBase Collections to Create**:
@@ -740,5 +823,13 @@ interface MockStoreSettings {
 
 ---
 
-## CURRENT STATUS: READY FOR ROUTE 1.5
-Next step: Implement Route 1.5 (Checkout) with multi-step form process for COD orders.
+## CURRENT STATUS: IMPLEMENTING CHECKOUT PAGE SETTINGS
+Next step: Create Route 2.7.1: Checkout Page Settings (/dashboard/settings/checkout)
+
+**Recently Completed:**
+- ✅ Phase 1: All Customer-Facing Routes (Mock Data)
+- ✅ Phase 2: Dashboard Routes (Mock Data) - Most routes completed
+- ✅ Route 2.3: Products Management (including edit functionality)
+
+**Currently Working On:**
+- 🚧 Route 2.7.1: Checkout Page Settings - NEW FEATURE REQUESTED

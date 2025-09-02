@@ -11,6 +11,14 @@ export enum Collections {
 	Mfas = "_mfas",
 	Otps = "_otps",
 	Superusers = "_superusers",
+	Analytics = "analytics",
+	Cartes = "cartes",
+	Categories = "categories",
+	Customers = "customers",
+	OrderItems = "order_items",
+	Orders = "orders",
+	Products = "products",
+	Stores = "stores",
 	Users = "users",
 }
 
@@ -90,6 +98,161 @@ export type SuperusersRecord = {
 	verified?: boolean
 }
 
+export type AnalyticsRecord<Tdata = unknown> = {
+	created?: IsoDateString
+	data?: null | Tdata
+	date?: IsoDateString
+	id: string
+	metric_name?: string
+	period?: string
+	store?: RecordIdString[]
+	updated?: IsoDateString
+}
+
+export type CartesRecord = {
+	created?: IsoDateString
+	id: string
+	inStock?: boolean
+	price?: number
+	productId?: RecordIdString[]
+	productImage?: string[]
+	productName?: string
+	quantity?: number
+	updated?: IsoDateString
+}
+
+export type CategoriesRecord = {
+	created?: IsoDateString
+	id: string
+	image?: string
+	name: string
+	updated?: IsoDateString
+}
+
+export enum CustomersStatusOptions {
+	"active" = "active",
+	"inactive" = "inactive",
+	"blocked" = "blocked",
+}
+export type CustomersRecord = {
+	created?: IsoDateString
+	email?: string
+	full_name?: string
+	id: string
+	lastOrderDate?: IsoDateString
+	phone?: number
+	status?: CustomersStatusOptions
+	totalOrders?: number
+	totalSpent?: number
+	updated?: IsoDateString
+}
+
+export type OrderItemsRecord<TselectedVariants = unknown> = {
+	created?: IsoDateString
+	id: string
+	orderId?: RecordIdString[]
+	price?: number
+	products?: RecordIdString[]
+	quantity?: number
+	selectedVariants?: null | TselectedVariants
+	updated?: IsoDateString
+}
+
+export enum OrdersStatusOptions {
+	"pending" = "pending",
+	"confirmed" = "confirmed",
+	"preparing" = "preparing",
+	"shipped" = "shipped",
+	"delivered" = "delivered",
+	"cancelled" = "cancelled",
+}
+
+export enum OrdersPaymentStatusOptions {
+	"pending" = "pending",
+	"cod-confirmed" = "cod-confirmed",
+	"paid" = "paid",
+	"failed" = "failed",
+}
+
+export enum OrdersFulfillmentStatusOptions {
+	"pending" = "pending",
+	"processing" = "processing",
+	"shipped" = "shipped",
+	"delivered" = "delivered",
+	"cancelled" = "cancelled",
+}
+export type OrdersRecord<TcustomerInfo = unknown, TshippingAddress = unknown> = {
+	created?: IsoDateString
+	customerId?: RecordIdString[]
+	customerInfo?: null | TcustomerInfo
+	estimatedDelivery?: IsoDateString
+	fulfillmentStatus?: OrdersFulfillmentStatusOptions
+	id: string
+	internalNotes?: string
+	notes?: string
+	orderNumber?: string
+	paymentStatus?: OrdersPaymentStatusOptions
+	shipping?: number
+	shippingAddress?: null | TshippingAddress
+	status?: OrdersStatusOptions
+	subtotal?: number
+	total?: number
+	trackingNumber?: string
+	updated?: IsoDateString
+}
+
+export type ProductsRecord<Tvariants = unknown> = {
+	baseCurrency?: string
+	basePrice?: number
+	categories: RecordIdString[]
+	cost: number
+	created?: IsoDateString
+	description?: HTMLString
+	featured_image?: string
+	id: string
+	images?: string[]
+	isActive?: boolean
+	old_price?: number
+	price: number
+	profit: number
+	reorderLevel?: number
+	sku?: string
+	slug: string
+	stockQuantity?: number
+	store?: RecordIdString[]
+	title: string
+	updated?: IsoDateString
+	variants?: null | Tvariants
+}
+
+export type StoresRecord<TbusinessHours = unknown, TcheckoutSettings = unknown, TcodSettingscodSettings = unknown, TcurrencyRates = unknown, Tnotifications_ = unknown, TshippingZones = unknown, TsocialLinks = unknown> = {
+	aboutUs?: string
+	address?: string
+	businessHours?: null | TbusinessHours
+	checkoutSettings?: null | TcheckoutSettings
+	codSettingscodSettings?: null | TcodSettingscodSettings
+	created?: IsoDateString
+	currency?: string
+	currencyRates?: null | TcurrencyRates
+	email?: string
+	heroBackground?: string
+	id: string
+	isActive?: boolean
+	is_cart_enabled?: boolean
+	logo?: string
+	notifications_?: null | Tnotifications_
+	paymentMethod?: string
+	phone?: string
+	shippingZones?: null | TshippingZones
+	socialLinks?: null | TsocialLinks
+	storeDescription?: string
+	storeName?: string
+	taxRate?: number
+	timezone?: string
+	updated?: IsoDateString
+	website?: string
+}
+
 export type UsersRecord = {
 	age?: number
 	avatar?: string
@@ -110,6 +273,14 @@ export type ExternalauthsResponse<Texpand = unknown> = Required<ExternalauthsRec
 export type MfasResponse<Texpand = unknown> = Required<MfasRecord> & BaseSystemFields<Texpand>
 export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord> & BaseSystemFields<Texpand>
 export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord> & AuthSystemFields<Texpand>
+export type AnalyticsResponse<Tdata = unknown, Texpand = unknown> = Required<AnalyticsRecord<Tdata>> & BaseSystemFields<Texpand>
+export type CartesResponse<Texpand = unknown> = Required<CartesRecord> & BaseSystemFields<Texpand>
+export type CategoriesResponse<Texpand = unknown> = Required<CategoriesRecord> & BaseSystemFields<Texpand>
+export type CustomersResponse<Texpand = unknown> = Required<CustomersRecord> & BaseSystemFields<Texpand>
+export type OrderItemsResponse<TselectedVariants = unknown, Texpand = unknown> = Required<OrderItemsRecord<TselectedVariants>> & BaseSystemFields<Texpand>
+export type OrdersResponse<TcustomerInfo = unknown, TshippingAddress = unknown, Texpand = unknown> = Required<OrdersRecord<TcustomerInfo, TshippingAddress>> & BaseSystemFields<Texpand>
+export type ProductsResponse<Tvariants = unknown, Texpand = unknown> = Required<ProductsRecord<Tvariants>> & BaseSystemFields<Texpand>
+export type StoresResponse<TbusinessHours = unknown, TcheckoutSettings = unknown, TcodSettingscodSettings = unknown, TcurrencyRates = unknown, Tnotifications_ = unknown, TshippingZones = unknown, TsocialLinks = unknown, Texpand = unknown> = Required<StoresRecord<TbusinessHours, TcheckoutSettings, TcodSettingscodSettings, TcurrencyRates, Tnotifications_, TshippingZones, TsocialLinks>> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
@@ -120,6 +291,14 @@ export type CollectionRecords = {
 	_mfas: MfasRecord
 	_otps: OtpsRecord
 	_superusers: SuperusersRecord
+	analytics: AnalyticsRecord
+	cartes: CartesRecord
+	categories: CategoriesRecord
+	customers: CustomersRecord
+	order_items: OrderItemsRecord
+	orders: OrdersRecord
+	products: ProductsRecord
+	stores: StoresRecord
 	users: UsersRecord
 }
 
@@ -129,6 +308,14 @@ export type CollectionResponses = {
 	_mfas: MfasResponse
 	_otps: OtpsResponse
 	_superusers: SuperusersResponse
+	analytics: AnalyticsResponse
+	cartes: CartesResponse
+	categories: CategoriesResponse
+	customers: CustomersResponse
+	order_items: OrderItemsResponse
+	orders: OrdersResponse
+	products: ProductsResponse
+	stores: StoresResponse
 	users: UsersResponse
 }
 
@@ -141,5 +328,13 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: '_mfas'): RecordService<MfasResponse>
 	collection(idOrName: '_otps'): RecordService<OtpsResponse>
 	collection(idOrName: '_superusers'): RecordService<SuperusersResponse>
+	collection(idOrName: 'analytics'): RecordService<AnalyticsResponse>
+	collection(idOrName: 'cartes'): RecordService<CartesResponse>
+	collection(idOrName: 'categories'): RecordService<CategoriesResponse>
+	collection(idOrName: 'customers'): RecordService<CustomersResponse>
+	collection(idOrName: 'order_items'): RecordService<OrderItemsResponse>
+	collection(idOrName: 'orders'): RecordService<OrdersResponse>
+	collection(idOrName: 'products'): RecordService<ProductsResponse>
+	collection(idOrName: 'stores'): RecordService<StoresResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
 }

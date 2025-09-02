@@ -9,134 +9,714 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
+import { Route as protectedDashboardRouteRouteImport } from './routes/(protected)/dashboard/route'
+import { Route as publicSearchIndexRouteImport } from './routes/(public)/search/index'
 import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
+import { Route as publicOrderConfirmationIndexRouteImport } from './routes/(public)/order-confirmation/index'
 import { Route as publicCheckoutIndexRouteImport } from './routes/(public)/checkout/index'
 import { Route as publicCartIndexRouteImport } from './routes/(public)/cart/index'
 import { Route as publicProductsProductSlugRouteImport } from './routes/(public)/products/$productSlug'
+import { Route as publicOrderConfirmationOrderIdRouteImport } from './routes/(public)/order-confirmation/$orderId'
+import { Route as protectedDashboardDashboardIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/index'
+import { Route as protectedDashboardDashboardSettingsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/index'
+import { Route as protectedDashboardDashboardProductsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/products/index'
+import { Route as protectedDashboardDashboardOrdersIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/orders/index'
+import { Route as protectedDashboardDashboardCustomersIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/customers/index'
+import { Route as protectedDashboardDashboardCouponsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/coupons/index'
+import { Route as protectedDashboardDashboardAnalyticsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/analytics/index'
+import { Route as protectedDashboardDashboardSettingsStoreRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/store'
+import { Route as protectedDashboardDashboardSettingsShippingRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/shipping'
+import { Route as protectedDashboardDashboardSettingsHomeRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/home'
+import { Route as protectedDashboardDashboardSettingsCheckoutRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/checkout'
+import { Route as protectedDashboardDashboardSettingsAppearanceRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/appearance'
+import { Route as protectedDashboardDashboardProductsSgfgsfgRouteImport } from './routes/(protected)/dashboard/_dashboard/products/sgfgsfg'
+import { Route as protectedDashboardDashboardProductsNewRouteImport } from './routes/(protected)/dashboard/_dashboard/products/new'
+import { Route as protectedDashboardDashboardProductsProductIdIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/products/$productId/index'
+import { Route as protectedDashboardDashboardProductsProductIdEditRouteImport } from './routes/(protected)/dashboard/_dashboard/products/$productId/edit'
+import { Route as protectedDashboardDashboardProductsProductIdProductIdRouteImport } from './routes/(protected)/dashboard/_dashboard/products/$productId/$productId'
+import { Route as protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings'
+import { Route as protectedDashboardDashboardSettingsHomeComponentsFileUploadRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/home/components/FileUpload'
 
-const publicIndexRoute = publicIndexRouteImport.update({
-  id: '/(public)/',
-  path: '/',
+const publicRouteRoute = publicRouteRouteImport.update({
+  id: '/(public)',
   getParentRoute: () => rootRouteImport,
+} as any)
+const publicIndexRoute = publicIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+const protectedDashboardRouteRoute = protectedDashboardRouteRouteImport.update({
+  id: '/(protected)/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicSearchIndexRoute = publicSearchIndexRouteImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => publicRouteRoute,
 } as any)
 const publicProductsIndexRoute = publicProductsIndexRouteImport.update({
-  id: '/(public)/products/',
+  id: '/products/',
   path: '/products/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
+const publicOrderConfirmationIndexRoute =
+  publicOrderConfirmationIndexRouteImport.update({
+    id: '/order-confirmation/',
+    path: '/order-confirmation/',
+    getParentRoute: () => publicRouteRoute,
+  } as any)
 const publicCheckoutIndexRoute = publicCheckoutIndexRouteImport.update({
-  id: '/(public)/checkout/',
+  id: '/checkout/',
   path: '/checkout/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
 const publicCartIndexRoute = publicCartIndexRouteImport.update({
-  id: '/(public)/cart/',
+  id: '/cart/',
   path: '/cart/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
 const publicProductsProductSlugRoute =
   publicProductsProductSlugRouteImport.update({
-    id: '/(public)/products/$productSlug',
+    id: '/products/$productSlug',
     path: '/products/$productSlug',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => publicRouteRoute,
   } as any)
+const publicOrderConfirmationOrderIdRoute =
+  publicOrderConfirmationOrderIdRouteImport.update({
+    id: '/order-confirmation/$orderId',
+    path: '/order-confirmation/$orderId',
+    getParentRoute: () => publicRouteRoute,
+  } as any)
+const protectedDashboardDashboardIndexRoute =
+  protectedDashboardDashboardIndexRouteImport.update({
+    id: '/_dashboard/',
+    path: '/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardSettingsIndexRoute =
+  protectedDashboardDashboardSettingsIndexRouteImport.update({
+    id: '/_dashboard/settings/',
+    path: '/settings/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardProductsIndexRoute =
+  protectedDashboardDashboardProductsIndexRouteImport.update({
+    id: '/_dashboard/products/',
+    path: '/products/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardOrdersIndexRoute =
+  protectedDashboardDashboardOrdersIndexRouteImport.update({
+    id: '/_dashboard/orders/',
+    path: '/orders/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardCustomersIndexRoute =
+  protectedDashboardDashboardCustomersIndexRouteImport.update({
+    id: '/_dashboard/customers/',
+    path: '/customers/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardCouponsIndexRoute =
+  protectedDashboardDashboardCouponsIndexRouteImport.update({
+    id: '/_dashboard/coupons/',
+    path: '/coupons/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardAnalyticsIndexRoute =
+  protectedDashboardDashboardAnalyticsIndexRouteImport.update({
+    id: '/_dashboard/analytics/',
+    path: '/analytics/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardSettingsStoreRoute =
+  protectedDashboardDashboardSettingsStoreRouteImport.update({
+    id: '/_dashboard/settings/store',
+    path: '/settings/store',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardSettingsShippingRoute =
+  protectedDashboardDashboardSettingsShippingRouteImport.update({
+    id: '/_dashboard/settings/shipping',
+    path: '/settings/shipping',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardSettingsHomeRoute =
+  protectedDashboardDashboardSettingsHomeRouteImport.update({
+    id: '/_dashboard/settings/home',
+    path: '/settings/home',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardSettingsCheckoutRoute =
+  protectedDashboardDashboardSettingsCheckoutRouteImport.update({
+    id: '/_dashboard/settings/checkout',
+    path: '/settings/checkout',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardSettingsAppearanceRoute =
+  protectedDashboardDashboardSettingsAppearanceRouteImport.update({
+    id: '/_dashboard/settings/appearance',
+    path: '/settings/appearance',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardProductsSgfgsfgRoute =
+  protectedDashboardDashboardProductsSgfgsfgRouteImport.update({
+    id: '/_dashboard/products/sgfgsfg',
+    path: '/products/sgfgsfg',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardProductsNewRoute =
+  protectedDashboardDashboardProductsNewRouteImport.update({
+    id: '/_dashboard/products/new',
+    path: '/products/new',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardProductsProductIdIndexRoute =
+  protectedDashboardDashboardProductsProductIdIndexRouteImport.update({
+    id: '/_dashboard/products/$productId/',
+    path: '/products/$productId/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardProductsProductIdEditRoute =
+  protectedDashboardDashboardProductsProductIdEditRouteImport.update({
+    id: '/_dashboard/products/$productId/edit',
+    path: '/products/$productId/edit',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardProductsProductIdProductIdRoute =
+  protectedDashboardDashboardProductsProductIdProductIdRouteImport.update({
+    id: '/_dashboard/products/$productId/$productId',
+    path: '/products/$productId/$productId',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute =
+  protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRouteImport.update(
+    {
+      id: '/hooks/useHomeSettings',
+      path: '/hooks/useHomeSettings',
+      getParentRoute: () => protectedDashboardDashboardSettingsHomeRoute,
+    } as any,
+  )
+const protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute =
+  protectedDashboardDashboardSettingsHomeComponentsFileUploadRouteImport.update(
+    {
+      id: '/components/FileUpload',
+      path: '/components/FileUpload',
+      getParentRoute: () => protectedDashboardDashboardSettingsHomeRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
+  '/dashboard': typeof protectedDashboardRouteRouteWithChildren
+  '/order-confirmation/$orderId': typeof publicOrderConfirmationOrderIdRoute
   '/products/$productSlug': typeof publicProductsProductSlugRoute
   '/cart': typeof publicCartIndexRoute
   '/checkout': typeof publicCheckoutIndexRoute
+  '/order-confirmation': typeof publicOrderConfirmationIndexRoute
   '/products': typeof publicProductsIndexRoute
+  '/search': typeof publicSearchIndexRoute
+  '/dashboard/': typeof protectedDashboardDashboardIndexRoute
+  '/dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
+  '/dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
+  '/dashboard/settings/appearance': typeof protectedDashboardDashboardSettingsAppearanceRoute
+  '/dashboard/settings/checkout': typeof protectedDashboardDashboardSettingsCheckoutRoute
+  '/dashboard/settings/home': typeof protectedDashboardDashboardSettingsHomeRouteWithChildren
+  '/dashboard/settings/shipping': typeof protectedDashboardDashboardSettingsShippingRoute
+  '/dashboard/settings/store': typeof protectedDashboardDashboardSettingsStoreRoute
+  '/dashboard/analytics': typeof protectedDashboardDashboardAnalyticsIndexRoute
+  '/dashboard/coupons': typeof protectedDashboardDashboardCouponsIndexRoute
+  '/dashboard/customers': typeof protectedDashboardDashboardCustomersIndexRoute
+  '/dashboard/orders': typeof protectedDashboardDashboardOrdersIndexRoute
+  '/dashboard/products': typeof protectedDashboardDashboardProductsIndexRoute
+  '/dashboard/settings': typeof protectedDashboardDashboardSettingsIndexRoute
+  '/dashboard/products/$productId/$productId': typeof protectedDashboardDashboardProductsProductIdProductIdRoute
+  '/dashboard/products/$productId/edit': typeof protectedDashboardDashboardProductsProductIdEditRoute
+  '/dashboard/products/$productId': typeof protectedDashboardDashboardProductsProductIdIndexRoute
+  '/dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
+  '/dashboard/settings/home/hooks/useHomeSettings': typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
+  '/order-confirmation/$orderId': typeof publicOrderConfirmationOrderIdRoute
   '/products/$productSlug': typeof publicProductsProductSlugRoute
   '/cart': typeof publicCartIndexRoute
   '/checkout': typeof publicCheckoutIndexRoute
+  '/order-confirmation': typeof publicOrderConfirmationIndexRoute
   '/products': typeof publicProductsIndexRoute
+  '/search': typeof publicSearchIndexRoute
+  '/dashboard': typeof protectedDashboardDashboardIndexRoute
+  '/dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
+  '/dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
+  '/dashboard/settings/appearance': typeof protectedDashboardDashboardSettingsAppearanceRoute
+  '/dashboard/settings/checkout': typeof protectedDashboardDashboardSettingsCheckoutRoute
+  '/dashboard/settings/home': typeof protectedDashboardDashboardSettingsHomeRouteWithChildren
+  '/dashboard/settings/shipping': typeof protectedDashboardDashboardSettingsShippingRoute
+  '/dashboard/settings/store': typeof protectedDashboardDashboardSettingsStoreRoute
+  '/dashboard/analytics': typeof protectedDashboardDashboardAnalyticsIndexRoute
+  '/dashboard/coupons': typeof protectedDashboardDashboardCouponsIndexRoute
+  '/dashboard/customers': typeof protectedDashboardDashboardCustomersIndexRoute
+  '/dashboard/orders': typeof protectedDashboardDashboardOrdersIndexRoute
+  '/dashboard/products': typeof protectedDashboardDashboardProductsIndexRoute
+  '/dashboard/settings': typeof protectedDashboardDashboardSettingsIndexRoute
+  '/dashboard/products/$productId/$productId': typeof protectedDashboardDashboardProductsProductIdProductIdRoute
+  '/dashboard/products/$productId/edit': typeof protectedDashboardDashboardProductsProductIdEditRoute
+  '/dashboard/products/$productId': typeof protectedDashboardDashboardProductsProductIdIndexRoute
+  '/dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
+  '/dashboard/settings/home/hooks/useHomeSettings': typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/(public)': typeof publicRouteRouteWithChildren
+  '/(protected)/dashboard': typeof protectedDashboardRouteRouteWithChildren
   '/(public)/': typeof publicIndexRoute
+  '/(public)/order-confirmation/$orderId': typeof publicOrderConfirmationOrderIdRoute
   '/(public)/products/$productSlug': typeof publicProductsProductSlugRoute
   '/(public)/cart/': typeof publicCartIndexRoute
   '/(public)/checkout/': typeof publicCheckoutIndexRoute
+  '/(public)/order-confirmation/': typeof publicOrderConfirmationIndexRoute
   '/(public)/products/': typeof publicProductsIndexRoute
+  '/(public)/search/': typeof publicSearchIndexRoute
+  '/(protected)/dashboard/_dashboard/': typeof protectedDashboardDashboardIndexRoute
+  '/(protected)/dashboard/_dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
+  '/(protected)/dashboard/_dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
+  '/(protected)/dashboard/_dashboard/settings/appearance': typeof protectedDashboardDashboardSettingsAppearanceRoute
+  '/(protected)/dashboard/_dashboard/settings/checkout': typeof protectedDashboardDashboardSettingsCheckoutRoute
+  '/(protected)/dashboard/_dashboard/settings/home': typeof protectedDashboardDashboardSettingsHomeRouteWithChildren
+  '/(protected)/dashboard/_dashboard/settings/shipping': typeof protectedDashboardDashboardSettingsShippingRoute
+  '/(protected)/dashboard/_dashboard/settings/store': typeof protectedDashboardDashboardSettingsStoreRoute
+  '/(protected)/dashboard/_dashboard/analytics/': typeof protectedDashboardDashboardAnalyticsIndexRoute
+  '/(protected)/dashboard/_dashboard/coupons/': typeof protectedDashboardDashboardCouponsIndexRoute
+  '/(protected)/dashboard/_dashboard/customers/': typeof protectedDashboardDashboardCustomersIndexRoute
+  '/(protected)/dashboard/_dashboard/orders/': typeof protectedDashboardDashboardOrdersIndexRoute
+  '/(protected)/dashboard/_dashboard/products/': typeof protectedDashboardDashboardProductsIndexRoute
+  '/(protected)/dashboard/_dashboard/settings/': typeof protectedDashboardDashboardSettingsIndexRoute
+  '/(protected)/dashboard/_dashboard/products/$productId/$productId': typeof protectedDashboardDashboardProductsProductIdProductIdRoute
+  '/(protected)/dashboard/_dashboard/products/$productId/edit': typeof protectedDashboardDashboardProductsProductIdEditRoute
+  '/(protected)/dashboard/_dashboard/products/$productId/': typeof protectedDashboardDashboardProductsProductIdIndexRoute
+  '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
+  '/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings': typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dashboard'
+    | '/order-confirmation/$orderId'
     | '/products/$productSlug'
     | '/cart'
     | '/checkout'
+    | '/order-confirmation'
     | '/products'
+    | '/search'
+    | '/dashboard/'
+    | '/dashboard/products/new'
+    | '/dashboard/products/sgfgsfg'
+    | '/dashboard/settings/appearance'
+    | '/dashboard/settings/checkout'
+    | '/dashboard/settings/home'
+    | '/dashboard/settings/shipping'
+    | '/dashboard/settings/store'
+    | '/dashboard/analytics'
+    | '/dashboard/coupons'
+    | '/dashboard/customers'
+    | '/dashboard/orders'
+    | '/dashboard/products'
+    | '/dashboard/settings'
+    | '/dashboard/products/$productId/$productId'
+    | '/dashboard/products/$productId/edit'
+    | '/dashboard/products/$productId'
+    | '/dashboard/settings/home/components/FileUpload'
+    | '/dashboard/settings/home/hooks/useHomeSettings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/products/$productSlug' | '/cart' | '/checkout' | '/products'
+  to:
+    | '/'
+    | '/order-confirmation/$orderId'
+    | '/products/$productSlug'
+    | '/cart'
+    | '/checkout'
+    | '/order-confirmation'
+    | '/products'
+    | '/search'
+    | '/dashboard'
+    | '/dashboard/products/new'
+    | '/dashboard/products/sgfgsfg'
+    | '/dashboard/settings/appearance'
+    | '/dashboard/settings/checkout'
+    | '/dashboard/settings/home'
+    | '/dashboard/settings/shipping'
+    | '/dashboard/settings/store'
+    | '/dashboard/analytics'
+    | '/dashboard/coupons'
+    | '/dashboard/customers'
+    | '/dashboard/orders'
+    | '/dashboard/products'
+    | '/dashboard/settings'
+    | '/dashboard/products/$productId/$productId'
+    | '/dashboard/products/$productId/edit'
+    | '/dashboard/products/$productId'
+    | '/dashboard/settings/home/components/FileUpload'
+    | '/dashboard/settings/home/hooks/useHomeSettings'
   id:
     | '__root__'
+    | '/(public)'
+    | '/(protected)/dashboard'
     | '/(public)/'
+    | '/(public)/order-confirmation/$orderId'
     | '/(public)/products/$productSlug'
     | '/(public)/cart/'
     | '/(public)/checkout/'
+    | '/(public)/order-confirmation/'
     | '/(public)/products/'
+    | '/(public)/search/'
+    | '/(protected)/dashboard/_dashboard/'
+    | '/(protected)/dashboard/_dashboard/products/new'
+    | '/(protected)/dashboard/_dashboard/products/sgfgsfg'
+    | '/(protected)/dashboard/_dashboard/settings/appearance'
+    | '/(protected)/dashboard/_dashboard/settings/checkout'
+    | '/(protected)/dashboard/_dashboard/settings/home'
+    | '/(protected)/dashboard/_dashboard/settings/shipping'
+    | '/(protected)/dashboard/_dashboard/settings/store'
+    | '/(protected)/dashboard/_dashboard/analytics/'
+    | '/(protected)/dashboard/_dashboard/coupons/'
+    | '/(protected)/dashboard/_dashboard/customers/'
+    | '/(protected)/dashboard/_dashboard/orders/'
+    | '/(protected)/dashboard/_dashboard/products/'
+    | '/(protected)/dashboard/_dashboard/settings/'
+    | '/(protected)/dashboard/_dashboard/products/$productId/$productId'
+    | '/(protected)/dashboard/_dashboard/products/$productId/edit'
+    | '/(protected)/dashboard/_dashboard/products/$productId/'
+    | '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload'
+    | '/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  publicIndexRoute: typeof publicIndexRoute
-  publicProductsProductSlugRoute: typeof publicProductsProductSlugRoute
-  publicCartIndexRoute: typeof publicCartIndexRoute
-  publicCheckoutIndexRoute: typeof publicCheckoutIndexRoute
-  publicProductsIndexRoute: typeof publicProductsIndexRoute
+  publicRouteRoute: typeof publicRouteRouteWithChildren
+  protectedDashboardRouteRoute: typeof protectedDashboardRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(public)': {
+      id: '/(public)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof publicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(public)/': {
       id: '/(public)/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof publicIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(protected)/dashboard': {
+      id: '/(protected)/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof protectedDashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/(public)/search/': {
+      id: '/(public)/search/'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof publicSearchIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
     '/(public)/products/': {
       id: '/(public)/products/'
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof publicProductsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/order-confirmation/': {
+      id: '/(public)/order-confirmation/'
+      path: '/order-confirmation'
+      fullPath: '/order-confirmation'
+      preLoaderRoute: typeof publicOrderConfirmationIndexRouteImport
+      parentRoute: typeof publicRouteRoute
     }
     '/(public)/checkout/': {
       id: '/(public)/checkout/'
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof publicCheckoutIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof publicRouteRoute
     }
     '/(public)/cart/': {
       id: '/(public)/cart/'
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof publicCartIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof publicRouteRoute
     }
     '/(public)/products/$productSlug': {
       id: '/(public)/products/$productSlug'
       path: '/products/$productSlug'
       fullPath: '/products/$productSlug'
       preLoaderRoute: typeof publicProductsProductSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/order-confirmation/$orderId': {
+      id: '/(public)/order-confirmation/$orderId'
+      path: '/order-confirmation/$orderId'
+      fullPath: '/order-confirmation/$orderId'
+      preLoaderRoute: typeof publicOrderConfirmationOrderIdRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/': {
+      id: '/(protected)/dashboard/_dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof protectedDashboardDashboardIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/settings/': {
+      id: '/(protected)/dashboard/_dashboard/settings/'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof protectedDashboardDashboardSettingsIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/products/': {
+      id: '/(protected)/dashboard/_dashboard/products/'
+      path: '/products'
+      fullPath: '/dashboard/products'
+      preLoaderRoute: typeof protectedDashboardDashboardProductsIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/orders/': {
+      id: '/(protected)/dashboard/_dashboard/orders/'
+      path: '/orders'
+      fullPath: '/dashboard/orders'
+      preLoaderRoute: typeof protectedDashboardDashboardOrdersIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/customers/': {
+      id: '/(protected)/dashboard/_dashboard/customers/'
+      path: '/customers'
+      fullPath: '/dashboard/customers'
+      preLoaderRoute: typeof protectedDashboardDashboardCustomersIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/coupons/': {
+      id: '/(protected)/dashboard/_dashboard/coupons/'
+      path: '/coupons'
+      fullPath: '/dashboard/coupons'
+      preLoaderRoute: typeof protectedDashboardDashboardCouponsIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/analytics/': {
+      id: '/(protected)/dashboard/_dashboard/analytics/'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof protectedDashboardDashboardAnalyticsIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/settings/store': {
+      id: '/(protected)/dashboard/_dashboard/settings/store'
+      path: '/settings/store'
+      fullPath: '/dashboard/settings/store'
+      preLoaderRoute: typeof protectedDashboardDashboardSettingsStoreRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/settings/shipping': {
+      id: '/(protected)/dashboard/_dashboard/settings/shipping'
+      path: '/settings/shipping'
+      fullPath: '/dashboard/settings/shipping'
+      preLoaderRoute: typeof protectedDashboardDashboardSettingsShippingRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/settings/home': {
+      id: '/(protected)/dashboard/_dashboard/settings/home'
+      path: '/settings/home'
+      fullPath: '/dashboard/settings/home'
+      preLoaderRoute: typeof protectedDashboardDashboardSettingsHomeRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/settings/checkout': {
+      id: '/(protected)/dashboard/_dashboard/settings/checkout'
+      path: '/settings/checkout'
+      fullPath: '/dashboard/settings/checkout'
+      preLoaderRoute: typeof protectedDashboardDashboardSettingsCheckoutRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/settings/appearance': {
+      id: '/(protected)/dashboard/_dashboard/settings/appearance'
+      path: '/settings/appearance'
+      fullPath: '/dashboard/settings/appearance'
+      preLoaderRoute: typeof protectedDashboardDashboardSettingsAppearanceRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/products/sgfgsfg': {
+      id: '/(protected)/dashboard/_dashboard/products/sgfgsfg'
+      path: '/products/sgfgsfg'
+      fullPath: '/dashboard/products/sgfgsfg'
+      preLoaderRoute: typeof protectedDashboardDashboardProductsSgfgsfgRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/products/new': {
+      id: '/(protected)/dashboard/_dashboard/products/new'
+      path: '/products/new'
+      fullPath: '/dashboard/products/new'
+      preLoaderRoute: typeof protectedDashboardDashboardProductsNewRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/products/$productId/': {
+      id: '/(protected)/dashboard/_dashboard/products/$productId/'
+      path: '/products/$productId'
+      fullPath: '/dashboard/products/$productId'
+      preLoaderRoute: typeof protectedDashboardDashboardProductsProductIdIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/products/$productId/edit': {
+      id: '/(protected)/dashboard/_dashboard/products/$productId/edit'
+      path: '/products/$productId/edit'
+      fullPath: '/dashboard/products/$productId/edit'
+      preLoaderRoute: typeof protectedDashboardDashboardProductsProductIdEditRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/products/$productId/$productId': {
+      id: '/(protected)/dashboard/_dashboard/products/$productId/$productId'
+      path: '/products/$productId/$productId'
+      fullPath: '/dashboard/products/$productId/$productId'
+      preLoaderRoute: typeof protectedDashboardDashboardProductsProductIdProductIdRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings': {
+      id: '/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings'
+      path: '/hooks/useHomeSettings'
+      fullPath: '/dashboard/settings/home/hooks/useHomeSettings'
+      preLoaderRoute: typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRouteImport
+      parentRoute: typeof protectedDashboardDashboardSettingsHomeRoute
+    }
+    '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload': {
+      id: '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload'
+      path: '/components/FileUpload'
+      fullPath: '/dashboard/settings/home/components/FileUpload'
+      preLoaderRoute: typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRouteImport
+      parentRoute: typeof protectedDashboardDashboardSettingsHomeRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
+interface publicRouteRouteChildren {
+  publicIndexRoute: typeof publicIndexRoute
+  publicOrderConfirmationOrderIdRoute: typeof publicOrderConfirmationOrderIdRoute
+  publicProductsProductSlugRoute: typeof publicProductsProductSlugRoute
+  publicCartIndexRoute: typeof publicCartIndexRoute
+  publicCheckoutIndexRoute: typeof publicCheckoutIndexRoute
+  publicOrderConfirmationIndexRoute: typeof publicOrderConfirmationIndexRoute
+  publicProductsIndexRoute: typeof publicProductsIndexRoute
+  publicSearchIndexRoute: typeof publicSearchIndexRoute
+}
+
+const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicIndexRoute: publicIndexRoute,
+  publicOrderConfirmationOrderIdRoute: publicOrderConfirmationOrderIdRoute,
   publicProductsProductSlugRoute: publicProductsProductSlugRoute,
   publicCartIndexRoute: publicCartIndexRoute,
   publicCheckoutIndexRoute: publicCheckoutIndexRoute,
+  publicOrderConfirmationIndexRoute: publicOrderConfirmationIndexRoute,
   publicProductsIndexRoute: publicProductsIndexRoute,
+  publicSearchIndexRoute: publicSearchIndexRoute,
+}
+
+const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
+  publicRouteRouteChildren,
+)
+
+interface protectedDashboardDashboardSettingsHomeRouteChildren {
+  protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute: typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
+  protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute: typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute
+}
+
+const protectedDashboardDashboardSettingsHomeRouteChildren: protectedDashboardDashboardSettingsHomeRouteChildren =
+  {
+    protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute:
+      protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute,
+    protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute:
+      protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute,
+  }
+
+const protectedDashboardDashboardSettingsHomeRouteWithChildren =
+  protectedDashboardDashboardSettingsHomeRoute._addFileChildren(
+    protectedDashboardDashboardSettingsHomeRouteChildren,
+  )
+
+interface protectedDashboardRouteRouteChildren {
+  protectedDashboardDashboardIndexRoute: typeof protectedDashboardDashboardIndexRoute
+  protectedDashboardDashboardProductsNewRoute: typeof protectedDashboardDashboardProductsNewRoute
+  protectedDashboardDashboardProductsSgfgsfgRoute: typeof protectedDashboardDashboardProductsSgfgsfgRoute
+  protectedDashboardDashboardSettingsAppearanceRoute: typeof protectedDashboardDashboardSettingsAppearanceRoute
+  protectedDashboardDashboardSettingsCheckoutRoute: typeof protectedDashboardDashboardSettingsCheckoutRoute
+  protectedDashboardDashboardSettingsHomeRoute: typeof protectedDashboardDashboardSettingsHomeRouteWithChildren
+  protectedDashboardDashboardSettingsShippingRoute: typeof protectedDashboardDashboardSettingsShippingRoute
+  protectedDashboardDashboardSettingsStoreRoute: typeof protectedDashboardDashboardSettingsStoreRoute
+  protectedDashboardDashboardAnalyticsIndexRoute: typeof protectedDashboardDashboardAnalyticsIndexRoute
+  protectedDashboardDashboardCouponsIndexRoute: typeof protectedDashboardDashboardCouponsIndexRoute
+  protectedDashboardDashboardCustomersIndexRoute: typeof protectedDashboardDashboardCustomersIndexRoute
+  protectedDashboardDashboardOrdersIndexRoute: typeof protectedDashboardDashboardOrdersIndexRoute
+  protectedDashboardDashboardProductsIndexRoute: typeof protectedDashboardDashboardProductsIndexRoute
+  protectedDashboardDashboardSettingsIndexRoute: typeof protectedDashboardDashboardSettingsIndexRoute
+  protectedDashboardDashboardProductsProductIdProductIdRoute: typeof protectedDashboardDashboardProductsProductIdProductIdRoute
+  protectedDashboardDashboardProductsProductIdEditRoute: typeof protectedDashboardDashboardProductsProductIdEditRoute
+  protectedDashboardDashboardProductsProductIdIndexRoute: typeof protectedDashboardDashboardProductsProductIdIndexRoute
+}
+
+const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren =
+  {
+    protectedDashboardDashboardIndexRoute:
+      protectedDashboardDashboardIndexRoute,
+    protectedDashboardDashboardProductsNewRoute:
+      protectedDashboardDashboardProductsNewRoute,
+    protectedDashboardDashboardProductsSgfgsfgRoute:
+      protectedDashboardDashboardProductsSgfgsfgRoute,
+    protectedDashboardDashboardSettingsAppearanceRoute:
+      protectedDashboardDashboardSettingsAppearanceRoute,
+    protectedDashboardDashboardSettingsCheckoutRoute:
+      protectedDashboardDashboardSettingsCheckoutRoute,
+    protectedDashboardDashboardSettingsHomeRoute:
+      protectedDashboardDashboardSettingsHomeRouteWithChildren,
+    protectedDashboardDashboardSettingsShippingRoute:
+      protectedDashboardDashboardSettingsShippingRoute,
+    protectedDashboardDashboardSettingsStoreRoute:
+      protectedDashboardDashboardSettingsStoreRoute,
+    protectedDashboardDashboardAnalyticsIndexRoute:
+      protectedDashboardDashboardAnalyticsIndexRoute,
+    protectedDashboardDashboardCouponsIndexRoute:
+      protectedDashboardDashboardCouponsIndexRoute,
+    protectedDashboardDashboardCustomersIndexRoute:
+      protectedDashboardDashboardCustomersIndexRoute,
+    protectedDashboardDashboardOrdersIndexRoute:
+      protectedDashboardDashboardOrdersIndexRoute,
+    protectedDashboardDashboardProductsIndexRoute:
+      protectedDashboardDashboardProductsIndexRoute,
+    protectedDashboardDashboardSettingsIndexRoute:
+      protectedDashboardDashboardSettingsIndexRoute,
+    protectedDashboardDashboardProductsProductIdProductIdRoute:
+      protectedDashboardDashboardProductsProductIdProductIdRoute,
+    protectedDashboardDashboardProductsProductIdEditRoute:
+      protectedDashboardDashboardProductsProductIdEditRoute,
+    protectedDashboardDashboardProductsProductIdIndexRoute:
+      protectedDashboardDashboardProductsProductIdIndexRoute,
+  }
+
+const protectedDashboardRouteRouteWithChildren =
+  protectedDashboardRouteRoute._addFileChildren(
+    protectedDashboardRouteRouteChildren,
+  )
+
+const rootRouteChildren: RootRouteChildren = {
+  publicRouteRoute: publicRouteRouteWithChildren,
+  protectedDashboardRouteRoute: protectedDashboardRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

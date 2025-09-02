@@ -1,0 +1,18 @@
+npm install @tiptap/extension-link @tiptap/extension-image @tiptap/extension-font-family
+npm install @tiptap/extension-font-size
+npm install @tiptap/react @tiptap/pm @tiptap/starter-kit @tiptap/extension-color @tiptap/extension-text-style @tiptap/extension-font-family @tiptap/extension-text-align @tiptap/extension-underline
+npm install react-quill quill
+npm install --save-dev @types/quill
+npm install @uiw/react-md-editor
+npm install react-quill quill --legacy-peer-deps
+npm uninstall react-quill quill @types/quill
+npm install @tiptap/react @tiptap/pm @tiptap/starter-kit @tiptap/extension-text-style @tiptap/extension-color @tiptap/extension-text-align @tiptap/extension-font-family @tiptap/extension-image @tiptap/extension-link
+
+
+// Add via PocketBase admin
+- `metric_name` (text) - e.g., "daily_revenue", "product_performance"
+- `date` (date) - for time-based caching
+- `period` (text) - "daily", "weekly", "monthly"
+- `data` (json) - cached calculation results
+- `expires_at` (datetime) - cache expiration
+- `store_id` (relation to stores) - if multi-store
