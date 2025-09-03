@@ -12,7 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { 
   LayoutDashboard, 
-  Package, 
+  Package,
   ShoppingCart, 
   Users, 
   BarChart3, 
@@ -42,22 +42,16 @@ interface MockUser {
 
 export const Route = createFileRoute('/(protected)/dashboard')({
   loader: () => {
-    console.log("OUTLET\n\n\n\n\n\n")
-    // Mock authentication check
-    const mockUser: MockUser = {
+    // Simple user data without auth checks
+    const user: MockUser = {
       id: '1',
-      email: 'admin@store.com',
+      email: 'store@example.com',
       firstName: 'Store',
       lastName: 'Owner',
       role: 'owner'
     }
 
-    const isAuthenticated = true
-    if (!isAuthenticated) {
-      throw new Error('Unauthorized')
-    }
-
-    return { user: mockUser }
+    return { user }
   },
   component: DashboardLayout,
 })
@@ -175,7 +169,7 @@ function DashboardSidebar({
               {!isCollapsed && (
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">Store Owner</p>
-                  <p className="text-xs text-gray-500 truncate">admin@store.com</p>
+                  <p className="text-xs text-gray-500 truncate">store@example.com</p>
                 </div>
               )}
             </div>
@@ -253,7 +247,7 @@ function MobileNav({
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">Store Owner</p>
-                <p className="text-xs text-gray-500 truncate">admin@store.com</p>
+                <p className="text-xs text-gray-500 truncate">store@example.com</p>
               </div>
             </div>
           </div>

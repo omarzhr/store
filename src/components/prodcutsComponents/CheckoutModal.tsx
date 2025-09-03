@@ -267,7 +267,7 @@ export function CheckoutModal({
                       id="fullName"
                       value={customerInfo.fullName}
                       onChange={(e) => setCustomerInfo(prev => ({ ...prev, fullName: e.target.value }))}
-                      placeholder="John Doe"
+                      placeholder="Enter your full name"
                       required
                     />
                   </div>
@@ -279,7 +279,7 @@ export function CheckoutModal({
                       type="tel"
                       value={customerInfo.phone}
                       onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
-                      placeholder="+212 600 000 000"
+                      placeholder="Enter your phone number"
                       required
                     />
                   </div>

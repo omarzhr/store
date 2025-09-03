@@ -491,11 +491,11 @@ function RouteComponent() {
                         onChange={(e) => handleCustomerFieldChange(field.id, e.target.value)}
                         placeholder={
                           field.id === 'email' ? 'your@email.com' :
-                          field.id === 'phoneNumber' ? '+212 600 000 000' :
-                          field.id === 'fullName' ? 'John Doe' :
+                          field.id === 'phoneNumber' ? 'Enter your phone number' :
+                          field.id === 'fullName' ? 'Enter your full name' :
                           field.id === 'address' ? 'Street address, apartment, suite, etc.' :
-                          field.id === 'city' ? 'Casablanca' :
-                          field.id === 'companyName' ? 'Company name (optional)' :
+                          field.id === 'city' ? 'Enter your city' :
+                          field.id === 'companyName' ? 'Enter company name (optional)' :
                           `Enter ${field.label.toLowerCase()}`
                         }
                         className={errors[field.id] ? 'border-red-500' : ''}
@@ -525,7 +525,7 @@ function RouteComponent() {
                           type="text"
                           value={customerInfo.fullName || ''}
                           onChange={(e) => handleCustomerFieldChange('fullName', e.target.value)}
-                          placeholder="John Doe"
+                          placeholder="Enter your full name"
                           className={errors.fullName ? 'border-red-500' : ''}
                           required
                         />
@@ -562,7 +562,7 @@ function RouteComponent() {
                           type="tel"
                           value={customerInfo.phoneNumber || ''}
                           onChange={(e) => handleCustomerFieldChange('phoneNumber', e.target.value)}
-                          placeholder="+212 600 000 000"
+                          placeholder="Enter your phone number"
                           className={errors.phoneNumber ? 'border-red-500' : ''}
                           required
                         />

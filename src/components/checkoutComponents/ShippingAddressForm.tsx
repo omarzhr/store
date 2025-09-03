@@ -59,71 +59,29 @@ export function ShippingAddressForm({
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [_isAddressInputFocused, setIsAddressInputFocused] = useState(false)
 
-  // Mock address suggestions - in real app, this would be an API call
-  const mockAddressSuggestions: AddressSuggestion[] = [
-    {
-      id: '1',
-      fullAddress: '123 Main Street, New York, NY 10001',
-      streetAddress: '123 Main Street',
-      city: 'New York',
-      state: 'New York',
-      zipCode: '10001',
-      country: 'US'
-    },
-    {
-      id: '2',
-      fullAddress: '456 Oak Avenue, Los Angeles, CA 90210',
-      streetAddress: '456 Oak Avenue',
-      city: 'Los Angeles',
-      state: 'California',
-      zipCode: '90210',
-      country: 'US'
-    },
-    {
-      id: '3',
-      fullAddress: '789 Pine Road, Chicago, IL 60601',
-      streetAddress: '789 Pine Road',
-      city: 'Chicago',
-      state: 'Illinois',
-      zipCode: '60601',
-      country: 'US'
-    },
-    {
-      id: '4',
-      fullAddress: '321 Elm Street, Houston, TX 77001',
-      streetAddress: '321 Elm Street',
-      city: 'Houston',
-      state: 'Texas',
-      zipCode: '77001',
-      country: 'US'
-    },
-    {
-      id: '5',
-      fullAddress: '654 Maple Drive, Phoenix, AZ 85001',
-      streetAddress: '654 Maple Drive',
-      city: 'Phoenix',
-      state: 'Arizona',
-      zipCode: '85001',
-      country: 'US'
+  // Address suggestions would come from a geocoding API like Google Places, Mapbox, etc.
+  const fetchAddressSuggestions = async (searchTerm: string): Promise<AddressSuggestion[]> => {
+    try {
+      // In a real app, this would call a geocoding API
+      // For now, return empty array - can be implemented with external APIs
+      console.log('Address search term:', searchTerm)
+      return []
+    } catch (error) {
+      console.error('Address suggestion error:', error)
+      return []
     }
-  ]
+  }
 
   const handleBlur = (_field: keyof ShippingAddress) => {
     onValidate()
   }
 
-  const handleAddressSearch = (searchTerm: string) => {
-    onChange('addressLine1', searchTerm)
-    
+  const handleAddressSearch = async (searchTerm: string) => {
     if (searchTerm.length >= 3) {
-      // Filter suggestions based on search term
-      const filtered = mockAddressSuggestions.filter(suggestion =>
-        suggestion.fullAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        suggestion.streetAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        suggestion.city.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      setAddressSuggestions(filtered)
-      setShowSuggestions(true)
+      // Fetch suggestions from geocoding API
+      const suggestions = await fetchAddressSuggestions(searchTerm)
+      setAddressSuggestions(suggestions)
+      setShowSuggestions(suggestions.length > 0)
     } else {
       setAddressSuggestions([])
       setShowSuggestions(false)

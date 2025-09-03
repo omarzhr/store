@@ -11,15 +11,15 @@ export const Route = createFileRoute('/(public)/account/')({
 })
 
 function AccountPage() {
-  // Mock user data - in a real app this would come from authentication context
+  // Simple user data without auth
   const user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
+    name: 'Store User',
+    email: 'user@example.com',
     joinDate: '2024-01-15',
     avatar: null
   }
 
-  // Mock orders data
+  // Simple orders data
   const recentOrders = [
     {
       id: '1',
@@ -87,9 +87,9 @@ function AccountPage() {
                   <Package className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">12</div>
+                  <div className="text-2xl font-bold">2</div>
                   <p className="text-xs text-muted-foreground">
-                    +2 from last month
+                    Total orders
                   </p>
                 </CardContent>
               </Card>
@@ -100,9 +100,9 @@ function AccountPage() {
                   <CreditCard className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$1,234</div>
+                  <div className="text-2xl font-bold">$219.49</div>
                   <p className="text-xs text-muted-foreground">
-                    +$189 from last month
+                    Total spent
                   </p>
                 </CardContent>
               </Card>
@@ -113,9 +113,9 @@ function AccountPage() {
                   <Heart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">8</div>
+                  <div className="text-2xl font-bold">0</div>
                   <p className="text-xs text-muted-foreground">
-                    3 items on sale
+                    Wishlist items
                   </p>
                 </CardContent>
               </Card>

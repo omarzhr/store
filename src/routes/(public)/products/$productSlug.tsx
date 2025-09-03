@@ -129,7 +129,7 @@ function CheckoutForm({
   checkoutSettings: any
 }) {
   const { quantity, totalPrice, selectedVariants } = usePriceCalculation()
-  
+
   // Debug: Log selected variants to understand what's happening
   console.log('🔍 CheckoutForm Debug:', {
     quantity,
@@ -152,11 +152,11 @@ function CheckoutForm({
   console.log("checkoutSettings", checkoutSettings)
   const allFields = checkoutSettings?.fields?.configurableFields || [
     { name: 'email', label: 'Email Address', type: 'email', required: true, placeholder: 'your@email.com' },
-    { name: 'fullName', label: 'Full Name', type: 'text', required: true, placeholder: 'John Doe' },
-    { name: 'phone', label: 'Phone Number', type: 'tel', required: false, placeholder: '+212 600 000 000' },
+    { name: 'fullName', label: 'Full Name', type: 'text', required: true, placeholder: 'Enter your full name' },
+    { name: 'phone', label: 'Phone Number', type: 'tel', required: false, placeholder: 'Enter your phone number' },
     { name: 'address', label: 'Address', type: 'textarea', required: true, placeholder: 'Street address, apartment, suite, etc.' },
-    { name: 'city', label: 'City', type: 'text', required: true, placeholder: 'Casablanca' },
-    { name: 'country', label: 'Country', type: 'text', required: false, placeholder: 'Morocco' }
+    { name: 'city', label: 'City', type: 'text', required: true, placeholder: 'Enter your city' },
+    { name: 'country', label: 'Country', type: 'text', required: false, placeholder: 'Enter your country' }
   ]
 
   // Add custom fields to the list
@@ -231,11 +231,7 @@ function CheckoutForm({
         products: [product.id],
         quantity: quantity,
         price: totalPrice,
-        selectedVariants: Object.keys(selectedVariants || {}).length > 0 ? selectedVariants : {
-          size: 'Large',
-          color: 'Blue',
-          testVariant: 'TestValue'
-        }
+        selectedVariants
       }
 
       // Debug: Log order item data before creation

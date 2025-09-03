@@ -3,23 +3,29 @@ import { Heart, Trash2, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/(public)/wishlist/')({
   component: WishlistPage,
 })
 
 function WishlistPage() {
-  // For now, we'll use mock data. In a real app, this would come from a state management solution
-  const wishlistItems: any[] = []
+  // Simple wishlist - empty for now, could be managed via localStorage or state
+  const [wishlistItems] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
 
   const removeFromWishlist = (itemId: string) => {
-    // Implementation would go here
-    console.log('Remove from wishlist:', itemId)
+    setLoading(true)
+    // In a real implementation, you would remove from wishlist storage
+    console.log('Removed from wishlist:', itemId)
+    setLoading(false)
   }
 
   const addToCart = (itemId: string) => {
-    // Implementation would go here
-    console.log('Add to cart:', itemId)
+    setLoading(true)
+    // In a real implementation, you would add to cart
+    console.log('Added to cart:', itemId)
+    setLoading(false)
   }
 
   return (
@@ -76,6 +82,7 @@ function WishlistPage() {
                       variant="outline"
                       className="absolute top-2 right-2 bg-white/80 hover:bg-white"
                       onClick={() => removeFromWishlist(item.id)}
+                      disabled={loading}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -105,6 +112,7 @@ function WishlistPage() {
                       size="sm" 
                       className="flex-1"
                       onClick={() => addToCart(item.id)}
+                      disabled={loading}
                     >
                       <ShoppingCart className="w-4 h-4 mr-2" />
                       Add to Cart

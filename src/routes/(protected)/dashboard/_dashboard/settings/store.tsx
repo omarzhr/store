@@ -384,7 +384,7 @@ function RouteComponent() {
                     id="phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+212 555 123 456"
+                    placeholder="Enter store phone number"
                     className="h-11"
                     disabled={loading}
                   />

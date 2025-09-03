@@ -148,10 +148,13 @@ function RouteComponent() {
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter
     const matchesPaymentStatus = paymentStatusFilter === 'all' || order.paymentStatus === paymentStatusFilter
     const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
+    const customerInfo = order.customerInfo as any
+    const customerName = customer?.full_name || customerInfo?.fullName || ''
+    const customerEmail = customer?.email || customerInfo?.email || ''
     const matchesSearch = searchQuery === '' || 
       order.orderNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customerEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.trackingNumber?.toLowerCase().includes(searchQuery.toLowerCase())
     
     // Date range filtering
@@ -241,9 +244,11 @@ function RouteComponent() {
     const headers = ['Order Number', 'Customer', 'Status', 'Payment Status', 'Total', 'Date']
     const data = filteredOrders.map(order => {
       const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
+      const customerInfo = order.customerInfo as any
+      const customerName = customer?.full_name || customerInfo?.fullName || 'Unknown'
       return [
         order.orderNumber || `#${order.id.slice(-8)}`,
-        customer?.full_name || 'Unknown',
+        customerName,
         order.status || 'pending',
         order.paymentStatus || 'pending',
         formatPrice(order.total || 0),
@@ -258,6 +263,8 @@ function RouteComponent() {
   // Mobile card view component
   const OrderCard = ({ order }: { order: OrdersResponse<any, any, any> }) => {
     const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
+    const customerInfo = order.customerInfo as any
+    const customerName = customer?.full_name || customerInfo?.fullName || 'Unknown Customer'
     
     return (
       <Card className="p-4 space-y-3">
@@ -267,7 +274,7 @@ function RouteComponent() {
               {order.orderNumber || `#${order.id.slice(-8)}`}
             </div>
             <div className="text-xs text-muted-foreground">
-              {customer?.full_name || 'Unknown Customer'}
+              {customerName}
             </div>
           </div>
           <div className="text-right space-y-1">
@@ -677,6 +684,28 @@ function RouteComponent() {
                     <TableBody>
                       {filteredOrders.map((order) => {
                         const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
+                        const customerInfo = order.customerInfo as any
+                        
+                        // Get customer name from either expanded customer or customerInfo
+                        const customerName = customer?.full_name || customerInfo?.fullName || 'Unknown Customer'
+                        const customerEmail = customer?.email || customerInfo?.email || ''
+                        
+                        // Debug logging
+                        if (showDebug) {
+                          console.log('Order Debug:', {
+                            orderId: order.id,
+                            orderNumber: order.orderNumber,
+                            customerId: order.customerId,
+                            expand: order.expand,
+                            customer: customer,
+                            customerInfo: customerInfo,
+                            customerFullName: customer?.full_name,
+                            customerInfoFullName: customerInfo?.fullName,
+                            finalCustomerName: customerName,
+                            customerEmail: customerEmail
+                          })
+                        }
+                        
                         return (
                           <TableRow key={order.id} className="group">
                             <TableCell>
@@ -698,7 +727,7 @@ function RouteComponent() {
                                   {order.orderNumber || `#${order.id.slice(-8)}`}
                                 </div>
                                 <div className="text-xs text-muted-foreground lg:hidden">
-                                  {customer?.full_name || 'Unknown Customer'}
+                                  {customerName}
                                 </div>
                                 {order.trackingNumber && (
                                   <div className="text-xs font-mono text-blue-600">
@@ -711,10 +740,23 @@ function RouteComponent() {
                             <TableCell className="hidden lg:table-cell">
                               <div className="space-y-1">
                                 <div className="font-medium">
-                                  {customer?.full_name || 'Unknown Customer'}
+                                  {customerName}
+                                  {showDebug && (
+                                    <span className="ml-2 text-xs text-red-500">
+                                      [Debug: {JSON.stringify({
+                                        hasExpand: !!order.expand,
+                                        hasCustomerId: !!(order.expand as any)?.customerId,
+                                        hasCustomerInfo: !!customerInfo,
+                                        customerIdType: typeof (order.expand as any)?.customerId,
+                                        isArray: Array.isArray((order.expand as any)?.customerId),
+                                        customerObj: customer ? 'exists' : 'null',
+                                        customerInfoObj: customerInfo ? 'exists' : 'null'
+                                      })}]
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
-                                  {customer?.email}
+                                  {customerEmail}
                                 </div>
                               </div>
                             </TableCell>
