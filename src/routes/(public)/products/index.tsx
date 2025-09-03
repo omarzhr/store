@@ -75,7 +75,7 @@ export const Route = createFileRoute('/(public)/products/')({
     if (deps.sortBy === 'newest') sort = '-created'
 
     const [result, storeSettings] = await Promise.all([
-      pb.collection(Collections.Products).getList<ProductsResponse<{ categories: CategoriesResponse[] }>>(1, 24, {
+      pb.collection(Collections.Products).getList<ProductsResponse<unknown, { categories: CategoriesResponse[] }>>(1, 24, {
         filter,
         sort,
         expand: 'categories'
@@ -635,13 +635,13 @@ function ProductGrid({
   initialProducts, 
   storeSettings 
 }: { 
-  initialProducts: (ProductsResponse & { expand: { categories: CategoriesResponse[] } })[]
+  initialProducts: ProductsResponse<unknown, { categories: CategoriesResponse[] }>[]
   storeSettings: StoresResponse | null
-}) { 
+}) {
   const navigate = Route.useNavigate()
   const search = Route.useSearch()
   const loaderData = Route.useLoaderData()
-  const [allProducts, setAllProducts] = useState<(ProductsResponse & { expand: { categories: CategoriesResponse[] } })[]>(initialProducts)
+  const [allProducts, setAllProducts] = useState<ProductsResponse<unknown, { categories: CategoriesResponse[] }>[]>(initialProducts)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(loaderData.hasMore)
   const [page, setPage] = useState(2)
@@ -710,7 +710,7 @@ function ProductGrid({
         expand: 'categories'
       })
 
-      setAllProducts(prev => [...prev, ...result.items])
+      setAllProducts(prev => [...prev, ...result.items as ProductsResponse<unknown, { categories: CategoriesResponse[] }>[]])
       setPage(prev => prev + 1)
       setHasMore(page < result.totalPages)
     } catch (error) {

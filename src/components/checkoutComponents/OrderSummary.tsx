@@ -6,7 +6,7 @@ import { formatPrice, type CartSummary } from '@/lib/cart-utils'
 import pb from '@/lib/db'
 
 interface OrderSummaryProps {
-  cartItems: CartesResponse<{ productId: ProductsResponse[] }>[] 
+  cartItems: CartesResponse<unknown, { productId: ProductsResponse[] }>[] 
   cartSummary: CartSummary
   storeSettings: StoresResponse | null
 }

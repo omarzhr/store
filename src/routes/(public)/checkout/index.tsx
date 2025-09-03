@@ -65,7 +65,7 @@ export const Route = createFileRoute('/(public)/checkout/')({
   loader: async () => {
     // Fetch real cart items and store settings with customization data
     const [cartItems, storeSettings] = await Promise.all([
-      pb.collection(Collections.Cartes).getFullList<CartesResponse<{ 
+      pb.collection(Collections.Cartes).getFullList<CartesResponse<unknown, { 
         productId: ProductsResponse[] 
       }>>(50, {
         expand: 'productId',
@@ -644,13 +644,12 @@ function RouteComponent() {
                     zipCode: '',
                     country: ''
                   }}
-                  selectedShippingOption={selectedShippingOption}
-                  cartItems={cartItems}
+
                   cartSummary={cartSummary}
                   onEdit={handleEditStep}
                   storeSettings={storeSettings}
                   hasShippingZones={hasShippingZones}
-                  enableShippingStep={shouldShowShippingStep}
+                  enableShippingOptions={shouldShowShippingStep}
                 />
                 <CODTerms
                   accepted={termsAccepted}
@@ -714,7 +713,6 @@ function RouteComponent() {
             <OrderSummary
               cartItems={cartItems} 
               cartSummary={cartSummary}
-              selectedShippingOption={selectedShippingOption}
               storeSettings={storeSettings}
             />
           </div>

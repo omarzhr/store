@@ -289,8 +289,8 @@ function ProductCard({
       <CardContent className="p-3 flex flex-col flex-1">
         {/* Categories */}
         <div className="mb-1 flex flex-wrap gap-1">
-          {Array.isArray(product.expand?.categories) &&
-            product.expand.categories.map((cat) => (
+          {Array.isArray((product.expand as any)?.categories) &&
+            (product.expand as any).categories.map((cat: any) => (
               <Badge key={cat.id} variant="secondary" className="text-xs text-gray-600 bg-gray-100">
                 {cat.name}
               </Badge>

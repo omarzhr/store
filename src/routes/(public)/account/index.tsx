@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { User, Package, Settings, Heart, MapPin, CreditCard, Shield, Bell } from 'lucide-react'
+import { User, Package, Heart, MapPin, CreditCard, Shield, Bell } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'

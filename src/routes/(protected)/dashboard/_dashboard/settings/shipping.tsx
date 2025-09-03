@@ -66,10 +66,10 @@ function RouteComponent() {
   }
 
   // Shipping zones state
-  const [shippingZones, setShippingZones] = useState(storeSettings.shippingZones || [])
+  const [shippingZones, setShippingZones] = useState<any[]>((storeSettings.shippingZones as any[]) || [])
   
   // Checkout settings state for shipping controls - Remove enableShippingOptions
-  const [checkoutSettings, setCheckoutSettings] = useState(
+  const [checkoutSettings, setCheckoutSettings] = useState<any>(
     storeSettings.checkoutSettings || {
       features: {
         enableShippingStep: true
@@ -284,7 +284,7 @@ function RouteComponent() {
                 <Switch
                   checked={checkoutSettings.features?.enableShippingStep ?? true}
                   onCheckedChange={(checked) => 
-                    setCheckoutSettings(prev => ({
+                    setCheckoutSettings((prev: any) => ({
                       ...prev,
                       features: {
                         ...prev.features,

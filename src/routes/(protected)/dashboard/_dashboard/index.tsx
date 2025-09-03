@@ -18,7 +18,7 @@ import {
   ChevronRight
 } from 'lucide-react'
 import pb from '@/lib/db'
-import { Collections, NotificationsTypeOptions } from '@/lib/types'
+import { Collections } from '@/lib/types'
 import { NotificationService } from '@/lib/services/notifications'
 
 

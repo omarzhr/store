@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { User, Mail, Phone, MapPin, Building } from 'lucide-react'
-import { type StoresResponse, type CheckoutSettings } from '@/lib/types'
+import { type StoresResponse, type CheckoutSettings } from '@/lib/types/index'
 
 interface CustomerInfoFormProps {
   customerInfo: any

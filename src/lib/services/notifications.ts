@@ -141,7 +141,7 @@ export class NotificationService {
    */
   static async markMultipleAsRead(ids: string[]): Promise<boolean> {
     try {
-      const updatePromises = ids.map(id => 
+      const updatePromises = ids.map(id =>
         pb.collection(Collections.Notifications).update(id, {
           is_read: true
         }, {
@@ -221,7 +221,7 @@ export class NotificationService {
    */
   static async exists(type: NotificationsTypeOptions, relatedId: string): Promise<boolean> {
     try {
-      const filter = type === 'new_order' 
+      const filter = type === 'new_order'
         ? `type = "new_order" && order = "${relatedId}"`
         : `type = "low_stock" && product = "${relatedId}"`
 
@@ -238,7 +238,7 @@ export class NotificationService {
   /**
    * Get notifications count by type
    */
-  static async getCountByType(): Promise<{ new_order: number; low_stock: number; total: number }> {
+  static async getCountByType(): Promise<{ new_order: number; low_stock: number; total: number; unread: number }> {
     try {
       const [newOrderCount, lowStockCount, unreadCount] = await Promise.all([
         pb.collection(Collections.Notifications).getList(1, 1, {
@@ -263,7 +263,7 @@ export class NotificationService {
       }
     } catch (error) {
       console.error('Error getting notification counts:', error)
-      return { new_order: 0, low_stock: 0, total: 0 }
+      return { new_order: 0, low_stock: 0, total: 0, unread: 0 }
     }
   }
 
