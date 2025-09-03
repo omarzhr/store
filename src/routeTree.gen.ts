@@ -24,6 +24,7 @@ import { Route as protectedDashboardDashboardIndexRouteImport } from './routes/(
 import { Route as protectedDashboardDashboardSettingsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/index'
 import { Route as protectedDashboardDashboardProductsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/products/index'
 import { Route as protectedDashboardDashboardOrdersIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/orders/index'
+import { Route as protectedDashboardDashboardNotificationsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/notifications/index'
 import { Route as protectedDashboardDashboardCustomersIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/customers/index'
 import { Route as protectedDashboardDashboardCouponsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/coupons/index'
 import { Route as protectedDashboardDashboardAnalyticsIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/analytics/index'
@@ -32,8 +33,9 @@ import { Route as protectedDashboardDashboardSettingsShippingRouteImport } from 
 import { Route as protectedDashboardDashboardSettingsHomeRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/home'
 import { Route as protectedDashboardDashboardSettingsCheckoutRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/checkout'
 import { Route as protectedDashboardDashboardSettingsAppearanceRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/appearance'
-import { Route as protectedDashboardDashboardProductsSgfgsfgRouteImport } from './routes/(protected)/dashboard/_dashboard/products/sgfgsfg'
 import { Route as protectedDashboardDashboardProductsNewRouteImport } from './routes/(protected)/dashboard/_dashboard/products/new'
+import { Route as protectedDashboardDashboardProductsProductSlugIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/products/$productSlug/index'
+import { Route as protectedDashboardDashboardProductsProductSlugEditRouteImport } from './routes/(protected)/dashboard/_dashboard/products/$productSlug/edit'
 import { Route as protectedDashboardDashboardSettingsHomeComponentsFileUploadRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/home/components/FileUpload'
 
 const publicRouteRoute = publicRouteRouteImport.update({
@@ -116,6 +118,12 @@ const protectedDashboardDashboardOrdersIndexRoute =
     path: '/orders/',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
+const protectedDashboardDashboardNotificationsIndexRoute =
+  protectedDashboardDashboardNotificationsIndexRouteImport.update({
+    id: '/_dashboard/notifications/',
+    path: '/notifications/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
 const protectedDashboardDashboardCustomersIndexRoute =
   protectedDashboardDashboardCustomersIndexRouteImport.update({
     id: '/_dashboard/customers/',
@@ -164,16 +172,22 @@ const protectedDashboardDashboardSettingsAppearanceRoute =
     path: '/settings/appearance',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
-const protectedDashboardDashboardProductsSgfgsfgRoute =
-  protectedDashboardDashboardProductsSgfgsfgRouteImport.update({
-    id: '/_dashboard/products/sgfgsfg',
-    path: '/products/sgfgsfg',
-    getParentRoute: () => protectedDashboardRouteRoute,
-  } as any)
 const protectedDashboardDashboardProductsNewRoute =
   protectedDashboardDashboardProductsNewRouteImport.update({
     id: '/_dashboard/products/new',
     path: '/products/new',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardProductsProductSlugIndexRoute =
+  protectedDashboardDashboardProductsProductSlugIndexRouteImport.update({
+    id: '/_dashboard/products/$productSlug/',
+    path: '/products/$productSlug/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardDashboardProductsProductSlugEditRoute =
+  protectedDashboardDashboardProductsProductSlugEditRouteImport.update({
+    id: '/_dashboard/products/$productSlug/edit',
+    path: '/products/$productSlug/edit',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
 const protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute =
@@ -198,7 +212,6 @@ export interface FileRoutesByFullPath {
   '/wishlist': typeof publicWishlistIndexRoute
   '/dashboard/': typeof protectedDashboardDashboardIndexRoute
   '/dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
-  '/dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
   '/dashboard/settings/appearance': typeof protectedDashboardDashboardSettingsAppearanceRoute
   '/dashboard/settings/checkout': typeof protectedDashboardDashboardSettingsCheckoutRoute
   '/dashboard/settings/home': typeof protectedDashboardDashboardSettingsHomeRouteWithChildren
@@ -207,9 +220,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/analytics': typeof protectedDashboardDashboardAnalyticsIndexRoute
   '/dashboard/coupons': typeof protectedDashboardDashboardCouponsIndexRoute
   '/dashboard/customers': typeof protectedDashboardDashboardCustomersIndexRoute
+  '/dashboard/notifications': typeof protectedDashboardDashboardNotificationsIndexRoute
   '/dashboard/orders': typeof protectedDashboardDashboardOrdersIndexRoute
   '/dashboard/products': typeof protectedDashboardDashboardProductsIndexRoute
   '/dashboard/settings': typeof protectedDashboardDashboardSettingsIndexRoute
+  '/dashboard/products/$productSlug/edit': typeof protectedDashboardDashboardProductsProductSlugEditRoute
+  '/dashboard/products/$productSlug': typeof protectedDashboardDashboardProductsProductSlugIndexRoute
   '/dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
 }
 export interface FileRoutesByTo {
@@ -224,7 +240,6 @@ export interface FileRoutesByTo {
   '/wishlist': typeof publicWishlistIndexRoute
   '/dashboard': typeof protectedDashboardDashboardIndexRoute
   '/dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
-  '/dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
   '/dashboard/settings/appearance': typeof protectedDashboardDashboardSettingsAppearanceRoute
   '/dashboard/settings/checkout': typeof protectedDashboardDashboardSettingsCheckoutRoute
   '/dashboard/settings/home': typeof protectedDashboardDashboardSettingsHomeRouteWithChildren
@@ -233,9 +248,12 @@ export interface FileRoutesByTo {
   '/dashboard/analytics': typeof protectedDashboardDashboardAnalyticsIndexRoute
   '/dashboard/coupons': typeof protectedDashboardDashboardCouponsIndexRoute
   '/dashboard/customers': typeof protectedDashboardDashboardCustomersIndexRoute
+  '/dashboard/notifications': typeof protectedDashboardDashboardNotificationsIndexRoute
   '/dashboard/orders': typeof protectedDashboardDashboardOrdersIndexRoute
   '/dashboard/products': typeof protectedDashboardDashboardProductsIndexRoute
   '/dashboard/settings': typeof protectedDashboardDashboardSettingsIndexRoute
+  '/dashboard/products/$productSlug/edit': typeof protectedDashboardDashboardProductsProductSlugEditRoute
+  '/dashboard/products/$productSlug': typeof protectedDashboardDashboardProductsProductSlugIndexRoute
   '/dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
 }
 export interface FileRoutesById {
@@ -253,7 +271,6 @@ export interface FileRoutesById {
   '/(public)/wishlist/': typeof publicWishlistIndexRoute
   '/(protected)/dashboard/_dashboard/': typeof protectedDashboardDashboardIndexRoute
   '/(protected)/dashboard/_dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
-  '/(protected)/dashboard/_dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
   '/(protected)/dashboard/_dashboard/settings/appearance': typeof protectedDashboardDashboardSettingsAppearanceRoute
   '/(protected)/dashboard/_dashboard/settings/checkout': typeof protectedDashboardDashboardSettingsCheckoutRoute
   '/(protected)/dashboard/_dashboard/settings/home': typeof protectedDashboardDashboardSettingsHomeRouteWithChildren
@@ -262,9 +279,12 @@ export interface FileRoutesById {
   '/(protected)/dashboard/_dashboard/analytics/': typeof protectedDashboardDashboardAnalyticsIndexRoute
   '/(protected)/dashboard/_dashboard/coupons/': typeof protectedDashboardDashboardCouponsIndexRoute
   '/(protected)/dashboard/_dashboard/customers/': typeof protectedDashboardDashboardCustomersIndexRoute
+  '/(protected)/dashboard/_dashboard/notifications/': typeof protectedDashboardDashboardNotificationsIndexRoute
   '/(protected)/dashboard/_dashboard/orders/': typeof protectedDashboardDashboardOrdersIndexRoute
   '/(protected)/dashboard/_dashboard/products/': typeof protectedDashboardDashboardProductsIndexRoute
   '/(protected)/dashboard/_dashboard/settings/': typeof protectedDashboardDashboardSettingsIndexRoute
+  '/(protected)/dashboard/_dashboard/products/$productSlug/edit': typeof protectedDashboardDashboardProductsProductSlugEditRoute
+  '/(protected)/dashboard/_dashboard/products/$productSlug/': typeof protectedDashboardDashboardProductsProductSlugIndexRoute
   '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
 }
 export interface FileRouteTypes {
@@ -282,7 +302,6 @@ export interface FileRouteTypes {
     | '/wishlist'
     | '/dashboard/'
     | '/dashboard/products/new'
-    | '/dashboard/products/sgfgsfg'
     | '/dashboard/settings/appearance'
     | '/dashboard/settings/checkout'
     | '/dashboard/settings/home'
@@ -291,9 +310,12 @@ export interface FileRouteTypes {
     | '/dashboard/analytics'
     | '/dashboard/coupons'
     | '/dashboard/customers'
+    | '/dashboard/notifications'
     | '/dashboard/orders'
     | '/dashboard/products'
     | '/dashboard/settings'
+    | '/dashboard/products/$productSlug/edit'
+    | '/dashboard/products/$productSlug'
     | '/dashboard/settings/home/components/FileUpload'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -308,7 +330,6 @@ export interface FileRouteTypes {
     | '/wishlist'
     | '/dashboard'
     | '/dashboard/products/new'
-    | '/dashboard/products/sgfgsfg'
     | '/dashboard/settings/appearance'
     | '/dashboard/settings/checkout'
     | '/dashboard/settings/home'
@@ -317,9 +338,12 @@ export interface FileRouteTypes {
     | '/dashboard/analytics'
     | '/dashboard/coupons'
     | '/dashboard/customers'
+    | '/dashboard/notifications'
     | '/dashboard/orders'
     | '/dashboard/products'
     | '/dashboard/settings'
+    | '/dashboard/products/$productSlug/edit'
+    | '/dashboard/products/$productSlug'
     | '/dashboard/settings/home/components/FileUpload'
   id:
     | '__root__'
@@ -336,7 +360,6 @@ export interface FileRouteTypes {
     | '/(public)/wishlist/'
     | '/(protected)/dashboard/_dashboard/'
     | '/(protected)/dashboard/_dashboard/products/new'
-    | '/(protected)/dashboard/_dashboard/products/sgfgsfg'
     | '/(protected)/dashboard/_dashboard/settings/appearance'
     | '/(protected)/dashboard/_dashboard/settings/checkout'
     | '/(protected)/dashboard/_dashboard/settings/home'
@@ -345,9 +368,12 @@ export interface FileRouteTypes {
     | '/(protected)/dashboard/_dashboard/analytics/'
     | '/(protected)/dashboard/_dashboard/coupons/'
     | '/(protected)/dashboard/_dashboard/customers/'
+    | '/(protected)/dashboard/_dashboard/notifications/'
     | '/(protected)/dashboard/_dashboard/orders/'
     | '/(protected)/dashboard/_dashboard/products/'
     | '/(protected)/dashboard/_dashboard/settings/'
+    | '/(protected)/dashboard/_dashboard/products/$productSlug/edit'
+    | '/(protected)/dashboard/_dashboard/products/$productSlug/'
     | '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload'
   fileRoutesById: FileRoutesById
 }
@@ -463,6 +489,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardDashboardOrdersIndexRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
+    '/(protected)/dashboard/_dashboard/notifications/': {
+      id: '/(protected)/dashboard/_dashboard/notifications/'
+      path: '/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof protectedDashboardDashboardNotificationsIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
     '/(protected)/dashboard/_dashboard/customers/': {
       id: '/(protected)/dashboard/_dashboard/customers/'
       path: '/customers'
@@ -519,18 +552,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardDashboardSettingsAppearanceRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
-    '/(protected)/dashboard/_dashboard/products/sgfgsfg': {
-      id: '/(protected)/dashboard/_dashboard/products/sgfgsfg'
-      path: '/products/sgfgsfg'
-      fullPath: '/dashboard/products/sgfgsfg'
-      preLoaderRoute: typeof protectedDashboardDashboardProductsSgfgsfgRouteImport
-      parentRoute: typeof protectedDashboardRouteRoute
-    }
     '/(protected)/dashboard/_dashboard/products/new': {
       id: '/(protected)/dashboard/_dashboard/products/new'
       path: '/products/new'
       fullPath: '/dashboard/products/new'
       preLoaderRoute: typeof protectedDashboardDashboardProductsNewRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/products/$productSlug/': {
+      id: '/(protected)/dashboard/_dashboard/products/$productSlug/'
+      path: '/products/$productSlug'
+      fullPath: '/dashboard/products/$productSlug'
+      preLoaderRoute: typeof protectedDashboardDashboardProductsProductSlugIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/_dashboard/products/$productSlug/edit': {
+      id: '/(protected)/dashboard/_dashboard/products/$productSlug/edit'
+      path: '/products/$productSlug/edit'
+      fullPath: '/dashboard/products/$productSlug/edit'
+      preLoaderRoute: typeof protectedDashboardDashboardProductsProductSlugEditRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
     '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload': {
@@ -589,7 +629,6 @@ const protectedDashboardDashboardSettingsHomeRouteWithChildren =
 interface protectedDashboardRouteRouteChildren {
   protectedDashboardDashboardIndexRoute: typeof protectedDashboardDashboardIndexRoute
   protectedDashboardDashboardProductsNewRoute: typeof protectedDashboardDashboardProductsNewRoute
-  protectedDashboardDashboardProductsSgfgsfgRoute: typeof protectedDashboardDashboardProductsSgfgsfgRoute
   protectedDashboardDashboardSettingsAppearanceRoute: typeof protectedDashboardDashboardSettingsAppearanceRoute
   protectedDashboardDashboardSettingsCheckoutRoute: typeof protectedDashboardDashboardSettingsCheckoutRoute
   protectedDashboardDashboardSettingsHomeRoute: typeof protectedDashboardDashboardSettingsHomeRouteWithChildren
@@ -598,9 +637,12 @@ interface protectedDashboardRouteRouteChildren {
   protectedDashboardDashboardAnalyticsIndexRoute: typeof protectedDashboardDashboardAnalyticsIndexRoute
   protectedDashboardDashboardCouponsIndexRoute: typeof protectedDashboardDashboardCouponsIndexRoute
   protectedDashboardDashboardCustomersIndexRoute: typeof protectedDashboardDashboardCustomersIndexRoute
+  protectedDashboardDashboardNotificationsIndexRoute: typeof protectedDashboardDashboardNotificationsIndexRoute
   protectedDashboardDashboardOrdersIndexRoute: typeof protectedDashboardDashboardOrdersIndexRoute
   protectedDashboardDashboardProductsIndexRoute: typeof protectedDashboardDashboardProductsIndexRoute
   protectedDashboardDashboardSettingsIndexRoute: typeof protectedDashboardDashboardSettingsIndexRoute
+  protectedDashboardDashboardProductsProductSlugEditRoute: typeof protectedDashboardDashboardProductsProductSlugEditRoute
+  protectedDashboardDashboardProductsProductSlugIndexRoute: typeof protectedDashboardDashboardProductsProductSlugIndexRoute
 }
 
 const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren =
@@ -609,8 +651,6 @@ const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren
       protectedDashboardDashboardIndexRoute,
     protectedDashboardDashboardProductsNewRoute:
       protectedDashboardDashboardProductsNewRoute,
-    protectedDashboardDashboardProductsSgfgsfgRoute:
-      protectedDashboardDashboardProductsSgfgsfgRoute,
     protectedDashboardDashboardSettingsAppearanceRoute:
       protectedDashboardDashboardSettingsAppearanceRoute,
     protectedDashboardDashboardSettingsCheckoutRoute:
@@ -627,12 +667,18 @@ const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren
       protectedDashboardDashboardCouponsIndexRoute,
     protectedDashboardDashboardCustomersIndexRoute:
       protectedDashboardDashboardCustomersIndexRoute,
+    protectedDashboardDashboardNotificationsIndexRoute:
+      protectedDashboardDashboardNotificationsIndexRoute,
     protectedDashboardDashboardOrdersIndexRoute:
       protectedDashboardDashboardOrdersIndexRoute,
     protectedDashboardDashboardProductsIndexRoute:
       protectedDashboardDashboardProductsIndexRoute,
     protectedDashboardDashboardSettingsIndexRoute:
       protectedDashboardDashboardSettingsIndexRoute,
+    protectedDashboardDashboardProductsProductSlugEditRoute:
+      protectedDashboardDashboardProductsProductSlugEditRoute,
+    protectedDashboardDashboardProductsProductSlugIndexRoute:
+      protectedDashboardDashboardProductsProductSlugIndexRoute,
   }
 
 const protectedDashboardRouteRouteWithChildren =

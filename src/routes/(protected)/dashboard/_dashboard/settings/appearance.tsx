@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Separator } from '@/components/ui/separator'
 import { ArrowLeft, Palette, Eye, RotateCcw, AlertCircle } from 'lucide-react'
-import type { StoresResponse, StoresRecord } from '@/lib/types'
+import type { StoresResponse } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
 

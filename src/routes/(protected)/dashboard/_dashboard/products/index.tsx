@@ -766,13 +766,13 @@ function ProductsComponent() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="w-48">
                                 <DropdownMenuItem asChild>
-                                  <Link to={`/dashboard/products/${product.id}`}>
+                                  <Link to="/dashboard/products/$productSlug" params={{ productSlug: product.slug }}>
                                     <Eye className="mr-2 h-4 w-4" />
                                     View Details
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                  <Link to={`/dashboard/products/${product.id}/edit`}>
+                                  <Link to="/dashboard/products/$productSlug/edit" params={{ productSlug: product.slug }}>
                                     <Edit className="mr-2 h-4 w-4" />
                                     Edit Product
                                   </Link>

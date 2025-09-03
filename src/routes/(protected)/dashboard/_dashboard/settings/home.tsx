@@ -260,6 +260,11 @@ function HomeSettingsComponent() {
   }
 
   const getCurrentCategoryImage = (categoryId: string) => {
+    // Check if there's a custom image URL set in categoryImages
+    if (categoryImages[categoryId]) {
+      return categoryImages[categoryId]
+    }
+    // Fall back to the category's default image
     const category = categories.find(cat => cat.id === categoryId)
     if (category?.image) {
       return pb.files.getUrl(category, category.image, { thumb: '100x100' })

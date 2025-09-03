@@ -177,13 +177,18 @@ function OrderItemsList({ order }: { order: OrdersResponse<{
           return (
             <div key={item.id} className="flex gap-3">
               <img
-                src={product?.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'}
-                alt={product?.name || 'Product'}
+                src={product?.featured_image 
+                  ? `http://127.0.0.1:8090/api/files/products/${product.id}/${product.featured_image}` 
+                  : product?.images?.[0] 
+                    ? `http://127.0.0.1:8090/api/files/products/${product.id}/${product.images[0]}`
+                    : 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+                }
+                alt={product?.title || 'Product'}
                 className="w-16 h-16 object-cover rounded border"
               />
               <div className="flex-1 min-w-0">
                 <h4 className="font-medium text-sm line-clamp-2 leading-tight">
-                  {product?.name || 'Product'}
+                  {product?.title || 'Product'}
                 </h4>
                 {item.selectedVariants && (
                   <div className="flex flex-wrap gap-1 mt-1">

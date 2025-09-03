@@ -29,6 +29,9 @@ import {
   Moon
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { NotificationService } from '@/lib/services/notifications'
+import type { NotificationsResponse } from '@/lib/types'
+import pb from '@/lib/db'
 
 // Mock user data
 interface MockUser {
@@ -87,6 +90,12 @@ const navigationItems = [
     href: '/dashboard/analytics',
     icon: BarChart3,
     description: 'View analytics'
+  },
+  {
+    name: 'Notifications',
+    href: '/dashboard/notifications',
+    icon: Bell,
+    description: 'View notifications'
   },
   {
     name: 'Settings',
@@ -305,13 +314,121 @@ function ThemeToggle() {
 
 // Notification Bell Component
 function NotificationBell() {
-  const [notifications] = useState([
-    { id: '1', title: 'New order received', type: 'order', isRead: false },
-    { id: '2', title: 'Low stock alert', type: 'inventory', isRead: false },
-    { id: '3', title: 'Customer message', type: 'customer', isRead: true },
-  ])
+  const [notifications, setNotifications] = useState<NotificationsResponse[]>([])
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
-  const unreadCount = notifications.filter(n => !n.isRead).length
+  useEffect(() => {
+    let isMounted = true
+    let unsubscribe: (() => void) | undefined
+
+    const loadNotifications = async () => {
+      if (!isMounted) return
+      
+      setLoading(true)
+      try {
+        const unreadNotifications = await NotificationService.getUnread(5)
+        if (isMounted) {
+          setNotifications(unreadNotifications)
+        }
+      } catch (error: any) {
+        // Silently handle auto-cancellation errors
+        if (!error?.message?.includes('autocancelled') && !error?.message?.includes('aborted')) {
+          console.error('Error loading notifications:', error)
+        }
+        if (isMounted) {
+          setNotifications([])
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    // Load notifications after a brief delay to prevent conflicts
+    const timeoutId = setTimeout(loadNotifications, 300)
+
+    // Subscribe to real-time updates
+    try {
+      unsubscribe = NotificationService.subscribeToUpdates((data) => {
+        if (!isMounted) return
+        
+        if (data.action === 'create' && !data.record.is_read) {
+          setNotifications(prev => [data.record, ...prev.slice(0, 4)])
+        } else if (data.action === 'delete') {
+          setNotifications(prev => prev.filter(n => n.id !== data.record.id))
+        } else if (data.action === 'update' && data.record.is_read) {
+          setNotifications(prev => prev.filter(n => n.id !== data.record.id))
+        }
+      })
+    } catch (error) {
+      console.error('Error subscribing to notifications:', error)
+    }
+
+    return () => {
+      isMounted = false
+      clearTimeout(timeoutId)
+      if (typeof unsubscribe === 'function') {
+        try {
+          unsubscribe()
+        } catch (error) {
+          console.error('Error during notification cleanup:', error)
+        }
+      }
+    }
+  }, [])
+
+  const getNotificationTitle = (notification: NotificationsResponse) => {
+    switch (notification.type) {
+      case 'new_order':
+        return 'New order received'
+      case 'low_stock':
+        return 'Low stock alert'
+      default:
+        return 'Notification'
+    }
+  }
+
+  const getNotificationDescription = (notification: NotificationsResponse) => {
+    switch (notification.type) {
+      case 'new_order':
+        return 'Order Management'
+      case 'low_stock':
+        return 'Inventory'
+      default:
+        return 'General'
+    }
+  }
+
+  const handleNotificationClick = async (notification: NotificationsResponse) => {
+    // Mark as read
+    try {
+      await NotificationService.markAsRead(notification.id)
+      setNotifications(prev => prev.filter(n => n.id !== notification.id))
+    } catch (error) {
+      console.error('Error marking notification as read:', error)
+    }
+
+    // Navigate to appropriate page
+    if (notification.type === 'new_order' && notification.order) {
+      navigate({ to: '/dashboard/orders', search: { orderId: notification.order } })
+    } else if (notification.type === 'low_stock' && notification.product) {
+      // Get product to navigate to its slug
+      try {
+        const product = await pb.collection('products').getOne(notification.product)
+        navigate({ to: '/dashboard/products/$productSlug', params: { productSlug: product.slug } })
+      } catch (error) {
+        navigate({ to: '/dashboard/products' })
+      }
+    }
+  }
+
+  const handleViewAll = () => {
+    navigate({ to: '/dashboard/notifications' })
+  }
+
+  const unreadCount = notifications.length
 
   return (
     <DropdownMenu>
@@ -323,32 +440,49 @@ function NotificationBell() {
               variant="destructive" 
               className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
             >
-              {unreadCount}
+              {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
-        <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+        <DropdownMenuLabel className="flex items-center justify-between">
+          <span>Notifications</span>
+          {unreadCount > 0 && (
+            <Badge variant="secondary" className="text-xs">
+              {unreadCount} new
+            </Badge>
+          )}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {notifications.length > 0 ? (
-          notifications.map((notification) => (
-            <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-3">
-              <div className="flex items-center justify-between w-full">
-                <span className={`text-sm ${notification.isRead ? `text-gray-600` : `font-medium`}`}>
-                  {notification.title}
-                </span>
-                {!notification.isRead && (
+        {loading ? (
+          <DropdownMenuItem disabled>
+            <span className="text-sm text-gray-500">Loading...</span>
+          </DropdownMenuItem>
+        ) : notifications.length > 0 ? (
+          <>
+            {notifications.map((notification) => (
+              <DropdownMenuItem 
+                key={notification.id} 
+                className="flex flex-col items-start p-3 cursor-pointer"
+                onClick={() => handleNotificationClick(notification)}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-sm font-medium">
+                    {getNotificationTitle(notification)}
+                  </span>
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                )}
-              </div>
-              <span className="text-xs text-gray-500 mt-1">
-                {notification.type === 'order' && 'Order Management'}
-                {notification.type === 'inventory' && 'Inventory'}
-                {notification.type === 'customer' && 'Customer Service'}
-              </span>
+                </div>
+                <span className="text-xs text-gray-500 mt-1">
+                  {getNotificationDescription(notification)}
+                </span>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleViewAll} className="text-center">
+              <span className="text-sm font-medium w-full">View All Notifications</span>
             </DropdownMenuItem>
-          ))
+          </>
         ) : (
           <DropdownMenuItem disabled>
             <span className="text-sm text-gray-500">No notifications</span>

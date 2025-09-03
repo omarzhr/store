@@ -7,6 +7,7 @@ import pb from '@/lib/db'
 import { calculateCartSummary } from '@/lib/cart-utils'
 import type { OrdersRecord, OrderItemsRecord, CustomersRecord } from '@/lib/types'
 
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -312,7 +313,7 @@ function RouteComponent() {
       const customerId = newCustomer.id
 
       // Prepare shipping address
-      const finalShippingAddress = enableShippingStep ? shippingAddress : {
+      const finalShippingAddress = shouldShowShippingStep ? shippingAddress : {
         addressLine1: customerInfo.address || '',
         addressLine2: '',
         city: customerInfo.city || '',
@@ -399,8 +400,8 @@ function RouteComponent() {
 
       // Navigate to order confirmation with order ID and order number
       navigate({ 
-        to: '/order-confirmation',
-        search: { orderId: order.id, orderNumber: orderNumber }
+        to: '/order-confirmation/$orderId',
+        params: { orderId: order.id }
       })
 
     } catch (error) {

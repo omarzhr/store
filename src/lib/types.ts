@@ -15,6 +15,7 @@ export enum Collections {
 	Cartes = "cartes",
 	Categories = "categories",
 	Customers = "customers",
+	Notifications = "notifications",
 	OrderItems = "order_items",
 	Orders = "orders",
 	Products = "products",
@@ -150,6 +151,20 @@ export type CustomersRecord = {
 	updated?: IsoDateString
 }
 
+export enum NotificationsTypeOptions {
+	"new_order" = "new_order",
+	"low_stock" = "low_stock",
+}
+export type NotificationsRecord = {
+	created?: IsoDateString
+	id: string
+	is_read?: boolean
+	order?: RecordIdString
+	product?: RecordIdString
+	type?: NotificationsTypeOptions
+	updated?: IsoDateString
+}
+
 export type OrderItemsRecord<TselectedVariants = unknown> = {
 	created?: IsoDateString
 	id: string
@@ -280,6 +295,7 @@ export type AnalyticsResponse<Tdata = unknown, Texpand = unknown> = Required<Ana
 export type CartesResponse<Tselected_variants = unknown, Texpand = unknown> = Required<CartesRecord<Tselected_variants>> & BaseSystemFields<Texpand>
 export type CategoriesResponse<Texpand = unknown> = Required<CategoriesRecord> & BaseSystemFields<Texpand>
 export type CustomersResponse<Texpand = unknown> = Required<CustomersRecord> & BaseSystemFields<Texpand>
+export type NotificationsResponse<Texpand = unknown> = Required<NotificationsRecord> & BaseSystemFields<Texpand>
 export type OrderItemsResponse<TselectedVariants = unknown, Texpand = unknown> = Required<OrderItemsRecord<TselectedVariants>> & BaseSystemFields<Texpand>
 export type OrdersResponse<TcustomerInfo = unknown, TshippingAddress = unknown, Texpand = unknown> = Required<OrdersRecord<TcustomerInfo, TshippingAddress>> & BaseSystemFields<Texpand>
 export type ProductsResponse<Tvariants = unknown, Texpand = unknown> = Required<ProductsRecord<Tvariants>> & BaseSystemFields<Texpand>
@@ -298,6 +314,7 @@ export type CollectionRecords = {
 	cartes: CartesRecord
 	categories: CategoriesRecord
 	customers: CustomersRecord
+	notifications: NotificationsRecord
 	order_items: OrderItemsRecord
 	orders: OrdersRecord
 	products: ProductsRecord
@@ -315,6 +332,7 @@ export type CollectionResponses = {
 	cartes: CartesResponse
 	categories: CategoriesResponse
 	customers: CustomersResponse
+	notifications: NotificationsResponse
 	order_items: OrderItemsResponse
 	orders: OrdersResponse
 	products: ProductsResponse
@@ -335,43 +353,10 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'cartes'): RecordService<CartesResponse>
 	collection(idOrName: 'categories'): RecordService<CategoriesResponse>
 	collection(idOrName: 'customers'): RecordService<CustomersResponse>
+	collection(idOrName: 'notifications'): RecordService<NotificationsResponse>
 	collection(idOrName: 'order_items'): RecordService<OrderItemsResponse>
 	collection(idOrName: 'orders'): RecordService<OrdersResponse>
 	collection(idOrName: 'products'): RecordService<ProductsResponse>
 	collection(idOrName: 'stores'): RecordService<StoresResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
-}
-
-// Custom types for checkout settings
-export interface ConfigurableField {
-	id: string
-	label: string
-	required: boolean
-	enabled: boolean
-	order: number
-}
-
-export interface CheckoutSettings {
-	fields?: {
-		phoneRequired?: boolean
-		companyNameEnabled?: boolean
-		emailEnabled?: boolean
-		addressEnabled?: boolean
-		customFields?: string[]
-		configurableFields?: ConfigurableField[]
-	}
-	appearance?: {
-		primaryColor?: string
-		buttonText?: string
-		submitButtonText?: string
-	}
-	features?: {
-		guestCheckoutEnabled?: boolean
-		showOrderSummary?: boolean
-		enableCouponCodes?: boolean
-	}
-	messages?: {
-		thankYouMessage?: string
-		processingMessage?: string
-	}
 }

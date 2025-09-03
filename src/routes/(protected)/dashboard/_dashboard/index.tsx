@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -17,7 +18,8 @@ import {
   ChevronRight
 } from 'lucide-react'
 import pb from '@/lib/db'
-import { Collections } from '@/lib/types'
+import { Collections, NotificationsTypeOptions } from '@/lib/types'
+import { NotificationService } from '@/lib/services/notifications'
 
 
 
@@ -37,7 +39,7 @@ interface MockRecentOrder {
   id: string
   customerName: string
   total: number
-  status: 'pending' | 'confirmed' | 'preparing' | 'shipped' | 'delivered'
+  status: 'pending' | 'confirmed' | 'preparing' | 'shipped' | 'delivered' | 'cancelled'
   placedAt: string
 }
 
@@ -104,9 +106,9 @@ export const Route = createFileRoute('/(protected)/dashboard/_dashboard/')({
         .slice(0, 4)
         .map(order => ({
           id: order.id,
-          customerName: order.customerInfo?.fullName || 'Unknown Customer',
+          customerName: (order.customerInfo as any)?.fullName || 'Unknown Customer',
           total: order.total || 0,
-          status: order.status || 'pending',
+          status: (order.status || 'pending') as MockRecentOrder['status'],
           placedAt: order.created
         }))
 
@@ -438,6 +440,76 @@ function TopProducts({ products }: { products: MockTopProduct[] }) {
   )
 }
 
+// Test Notifications Component
+function TestNotifications() {
+  const [isCreating, setIsCreating] = useState(false)
+
+  const handleCreateOrderNotification = async () => {
+    if (isCreating) return
+    setIsCreating(true)
+    try {
+      const result = await NotificationService.createOrderNotification('test-order-' + Date.now())
+      if (result) {
+        alert('Order notification created successfully!')
+      } else {
+        alert('Failed to create order notification')
+      }
+    } catch (error) {
+      console.error('Error creating order notification:', error)
+      alert('Error creating notification: ' + (error as Error).message)
+    } finally {
+      setIsCreating(false)
+    }
+  }
+
+  const handleCreateStockNotification = async () => {
+    if (isCreating) return
+    setIsCreating(true)
+    try {
+      const result = await NotificationService.createLowStockNotification('test-product-' + Date.now())
+      if (result) {
+        alert('Stock notification created successfully!')
+      } else {
+        alert('Failed to create stock notification')
+      }
+    } catch (error) {
+      console.error('Error creating stock notification:', error)
+      alert('Error creating notification: ' + (error as Error).message)
+    } finally {
+      setIsCreating(false)
+    }
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base sm:text-lg">Test Notifications</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex gap-4">
+          <Button 
+            onClick={handleCreateOrderNotification} 
+            variant="outline"
+            disabled={isCreating}
+          >
+            {isCreating ? 'Creating...' : 'Test Order Notification'}
+          </Button>
+          <Button 
+            onClick={handleCreateStockNotification} 
+            variant="outline"
+            disabled={isCreating}
+          >
+            {isCreating ? 'Creating...' : 'Test Stock Notification'}
+          </Button>
+        </div>
+        <p className="text-sm text-gray-600">
+          Use these buttons to test the notification system. Check the bell icon in the header after clicking.
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
+
 function DashboardOverview() {
   const { stats, recentOrders, topProducts, lowStockProducts } = Route.useLoaderData()
   const navigate = useNavigate()
@@ -536,6 +608,9 @@ function DashboardOverview() {
         {lowStockProducts.length > 0 && (
           <LowStockAlert products={lowStockProducts} />
         )}
+
+        {/* Test Notifications Section - Development Only */}
+        <TestNotifications />
       </div>
     </div>
   )

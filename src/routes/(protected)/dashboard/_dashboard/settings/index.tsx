@@ -24,6 +24,23 @@ import type { StoresResponse } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
 
+interface SettingsSection {
+  title: string
+  description: string
+  icon: React.ComponentType<any>
+  configured: boolean
+  action: () => void | Promise<void>
+  isNew?: boolean
+  badge?: string
+}
+
+interface SettingsCategory {
+  id: string
+  title: string
+  icon: React.ComponentType<any>
+  sections: SettingsSection[]
+}
+
 export const Route = createFileRoute('/(protected)/dashboard/_dashboard/settings/')({
   loader: async () => {
     try {
@@ -97,7 +114,7 @@ function RouteComponent() {
     }
   }
 
-  const settingsCategories = [
+  const settingsCategories: SettingsCategory[] = [
     {
       id: 'general',
       title: 'General',
@@ -145,7 +162,7 @@ function RouteComponent() {
           description: 'Cash on delivery and payment options',
           icon: DollarSign,
           configured: !!(storeSettings.codSettingscodSettings),
-          action: () => navigate({ to: '/dashboard/settings/payments' })
+          action: () => navigate({ to: '/dashboard/settings/checkout' })
         }
       ]
     },
@@ -159,14 +176,14 @@ function RouteComponent() {
           description: 'Email alerts and notification preferences',
           icon: Bell,
           configured: !!(storeSettings.notifications_),
-          action: () => navigate({ to: '/dashboard/settings/notifications' })
+          action: () => console.log('Notifications settings coming soon')
         },
         {
           title: 'Customer Communication',
           description: 'Order confirmations and status updates',
           icon: Users,
           configured: false,
-          action: () => navigate({ to: '/dashboard/settings/communication' })
+          action: () => console.log('Communication settings coming soon')
         }
       ]
     },
@@ -180,14 +197,14 @@ function RouteComponent() {
           description: 'Data protection and security settings',
           icon: Shield,
           configured: false,
-          action: () => navigate({ to: '/dashboard/settings/security' })
+          action: () => console.log('Security settings coming soon')
         },
         {
           title: 'Analytics & Tracking',
           description: 'Google Analytics and conversion tracking',
           icon: BarChart3,
           configured: false,
-          action: () => navigate({ to: '/dashboard/settings/analytics' })
+          action: () => console.log('Analytics settings coming soon')
         }
       ]
     }

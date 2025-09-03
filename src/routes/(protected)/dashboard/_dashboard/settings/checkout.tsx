@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ArrowLeft, Plus, X, GripVertical, Palette, MessageSquare, CreditCard, AlertCircle } from 'lucide-react'
-import type { StoresResponse, CheckoutSettings } from '@/lib/types'
+import type { StoresResponse, StoresRecord, CheckoutSettings } from '@/lib/types/index'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
 

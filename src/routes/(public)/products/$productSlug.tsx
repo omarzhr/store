@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import type { ProductsResponse, CategoriesResponse, StoresResponse,OrdersRecord, OrderItemsRecord, CustomersRecord } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
+
 import { ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -248,9 +249,12 @@ function CheckoutForm({
 
       // Update product stock if applicable
       if (product.stockQuantity !== undefined && product.stockQuantity > 0) {
+        const newStockQuantity = Math.max(0, product.stockQuantity - quantity)
         await pb.collection(Collections.Products).update(product.id, {
-          stockQuantity: Math.max(0, product.stockQuantity - quantity)
+          stockQuantity: newStockQuantity
         })
+        
+
       }
 
       console.log('Order created successfully:', {

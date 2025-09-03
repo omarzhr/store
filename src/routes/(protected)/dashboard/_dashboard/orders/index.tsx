@@ -31,6 +31,11 @@ import { OrderItemsDebug } from '@/components/debug/OrderItemsDebug'
 import { OrderItemsList } from '@/components/orders/OrderItemsList'
 
 export const Route = createFileRoute('/(protected)/dashboard/_dashboard/orders/')({
+  validateSearch: (search: Record<string, unknown>): { orderId?: string } => {
+    return {
+      orderId: typeof search.orderId === 'string' ? search.orderId : undefined,
+    }
+  },
   loader: async () => {
     try {
       const [ordersResult, storeSettings] = await Promise.all([
@@ -73,6 +78,7 @@ function RouteComponent() {
   const loaderData = Route.useLoaderData()
   const { orders, storeSettings, hasPermission } = loaderData
   const navigate = useNavigate()
+  const search = Route.useSearch()
   const [selectedOrder, setSelectedOrder] = useState<OrdersResponse<any, any, any> | null>(null)
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [paymentStatusFilter, setPaymentStatusFilter] = useState<string>('all')
@@ -89,6 +95,22 @@ function RouteComponent() {
   const [selectedOrders, setSelectedOrders] = useState<string[]>([])
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [dateRange, setDateRange] = useState<string>('all')
+
+  // Auto-open order dialog if orderId is in search params
+  useState(() => {
+    if (search.orderId && orders.length > 0) {
+      const order = orders.find(o => o.id === search.orderId)
+      if (order) {
+        setSelectedOrder(order)
+        // Clear the search param after opening
+        navigate({ 
+          to: '/dashboard/orders',
+          search: {},
+          replace: true
+        })
+      }
+    }
+  })
   const [_showBulkActions, _setShowBulkActions] = useState(false)
   const [sortBy, setSortBy] = useState<string>('newest')
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
@@ -999,12 +1021,28 @@ function RouteComponent() {
                           <CardContent>
                             {(() => {
                               const address = selectedOrder.shippingAddress as any
+                              // Handle both field name patterns
+                              const addressLine1 = address.addressLine1 || address.address || ''
+                              const addressLine2 = address.addressLine2 || ''
+                              const city = address.city || ''
+                              const state = address.state || ''
+                              const zipCode = address.zipCode || address.postalCode || ''
+                              const country = address.country || ''
+                              
                               return (
                                 <div className="text-sm space-y-1">
-                                  <div>{address.addressLine1}</div>
-                                  {address.addressLine2 && <div>{address.addressLine2}</div>}
-                                  <div>{address.city}, {address.state} {address.zipCode}</div>
-                                  <div>{address.country}</div>
+                                  {addressLine1 && <div>{addressLine1}</div>}
+                                  {addressLine2 && <div>{addressLine2}</div>}
+                                  {(city || state || zipCode) && (
+                                    <div>
+                                      {city && city}
+                                      {city && (state || zipCode) && ', '}
+                                      {state && state}
+                                      {state && zipCode && ' '}
+                                      {zipCode && zipCode}
+                                    </div>
+                                  )}
+                                  {country && <div>{country}</div>}
                                 </div>
                               )
                             })()}
