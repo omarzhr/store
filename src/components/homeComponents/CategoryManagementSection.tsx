@@ -11,7 +11,7 @@ export function CategoryManagementSection({
   newCategoryName,
   setNewCategoryName,
   editingCategoryId,
-  setEditingCategoryId,
+
   editCategoryName,
   setEditCategoryName,
   categoryToDelete,

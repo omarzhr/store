@@ -388,9 +388,9 @@ export function OrderItemsDebug() {
                         <div>Products: {item.products ? item.products.join(', ') : 'None'}</div>
                         <div>Quantity: {item.quantity || 'Unknown'}</div>
                         <div>Price: {item.price ? `${item.price} DH` : 'Unknown'}</div>
-                        {item.selectedVariants && (
+                        {(item.selectedVariants && (
                           <div>Variants: Yes</div>
-                        )}
+                        )) as React.ReactNode}
                       </div>
                     </div>
                   ))}

@@ -8,14 +8,12 @@ import pb from '@/lib/db'
 interface OrderSummaryProps {
   cartItems: CartesResponse<{ productId: ProductsResponse[] }>[] 
   cartSummary: CartSummary
-  selectedShippingOption: string
   storeSettings: StoresResponse | null
 }
 
 export function OrderSummary({
   cartItems,
   cartSummary,
-  selectedShippingOption,
   storeSettings
 }: OrderSummaryProps) {
   return (
@@ -28,7 +26,7 @@ export function OrderSummary({
           {/* Cart Items */}
           <div className="space-y-3">
             {cartItems.map((item) => {
-              const product = Array.isArray(item.expand?.productId) ? item.expand.productId[0] : item.expand?.productId
+              const product = Array.isArray((item.expand as any)?.productId) ? (item.expand as any).productId[0] : (item.expand as any)?.productId
               const price = item.price || product?.price || 0
               
               return (

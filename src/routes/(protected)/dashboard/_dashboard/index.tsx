@@ -16,7 +16,7 @@ import {
   MoreHorizontal,
   ChevronRight
 } from 'lucide-react'
-import { type ProductsResponse, type UsersResponse } from '@/lib/types'
+
 
 // Mock data interfaces based on existing types
 interface MockDashboardStats {

@@ -55,9 +55,9 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
                 </div>
                 
                 <CardContent className="p-3 space-y-2">
-                  {product.expand?.categories && product.expand.categories.length > 0 && (
+                  {(product.expand as any)?.categories && (product.expand as any).categories.length > 0 && (
                     <Badge variant="secondary" className="text-xs text-gray-600 bg-gray-100">
-                      {product.expand.categories[0].name}
+                      {(product.expand as any).categories[0].name}
                     </Badge>
                   )}
                   

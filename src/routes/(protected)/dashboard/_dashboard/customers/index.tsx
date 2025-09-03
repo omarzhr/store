@@ -7,23 +7,23 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuCheckboxItem } from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
+
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { 
   AlertCircle, Users, Phone, Mail, Eye, MoreVertical, Download, MessageSquare, Search, 
-  Filter, RefreshCw, AlertTriangle, Calendar, User, CreditCard, Edit3, Plus, Trash2, 
+  Filter, RefreshCw, AlertTriangle, Calendar, User, Edit3, Trash2,
   ShoppingBag, ChevronDown, FileDown, FileSpreadsheet, Send, UserPlus, UserCheck,
-  UserX, BarChart3, TrendingUp, Settings, MapPin, Clock, Star
+  UserX, BarChart3, TrendingUp, Clock
 } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import type { CustomersResponse, OrdersResponse, StoresResponse } from '@/lib/types'
+import type { CustomersResponse, StoresResponse } from '@/lib/types'
 import { CustomersStatusOptions } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'

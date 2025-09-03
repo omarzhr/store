@@ -7,23 +7,24 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuCheckboxItem } from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
+
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { 
-  AlertCircle, Package, Phone, MapPin, Eye, MoreVertical, Download, Printer, MessageSquare, 
+  AlertCircle, Package, Phone, MapPin, Eye, MoreVertical, Download, Printer,
   Clock, Truck, CheckCircle, XCircle, Search, Filter, RefreshCw, AlertTriangle, Calendar, 
   User, CreditCard, FileText, Edit3, ChevronDown, FileDown, FileSpreadsheet, Plus,
-  Archive, Trash2, Send, DollarSign, TrendingUp, TrendingDown, BarChart3, Bug
+  Send, DollarSign, BarChart3, Bug
 } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import type { OrdersResponse, OrderItemsResponse, ProductsResponse, CustomersResponse, StoresResponse, OrdersStatusOptions, OrdersPaymentStatusOptions, OrdersFulfillmentStatusOptions } from '@/lib/types'
+import type { OrdersResponse, StoresResponse } from '@/lib/types'
+import { OrdersStatusOptions, OrdersPaymentStatusOptions, OrdersFulfillmentStatusOptions } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
 import { OrderItemsDebug } from '@/components/debug/OrderItemsDebug'
@@ -78,9 +79,9 @@ function RouteComponent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
   const [selectedOrderForUpdate, setSelectedOrderForUpdate] = useState<OrdersResponse<any, any, any> | null>(null)
-  const [newStatus, setNewStatus] = useState<OrdersStatusOptions>('pending')
-  const [newPaymentStatus, setNewPaymentStatus] = useState<OrdersPaymentStatusOptions>('pending')
-  const [newFulfillmentStatus, setNewFulfillmentStatus] = useState<OrdersFulfillmentStatusOptions>('pending')
+  const [newStatus, setNewStatus] = useState<OrdersStatusOptions>(OrdersStatusOptions.pending)
+  const [newPaymentStatus, setNewPaymentStatus] = useState<OrdersPaymentStatusOptions>(OrdersPaymentStatusOptions.pending)
+  const [newFulfillmentStatus, setNewFulfillmentStatus] = useState<OrdersFulfillmentStatusOptions>(OrdersFulfillmentStatusOptions.pending)
   const [trackingNumber, setTrackingNumber] = useState('')
   const [updateNotes, setUpdateNotes] = useState('')
   const [estimatedDelivery, setEstimatedDelivery] = useState('')
@@ -88,7 +89,7 @@ function RouteComponent() {
   const [selectedOrders, setSelectedOrders] = useState<string[]>([])
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [dateRange, setDateRange] = useState<string>('all')
-  const [showBulkActions, setShowBulkActions] = useState(false)
+  const [_showBulkActions, _setShowBulkActions] = useState(false)
   const [sortBy, setSortBy] = useState<string>('newest')
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
   const [showDebug, setShowDebug] = useState(false)
@@ -146,7 +147,7 @@ function RouteComponent() {
   const filteredOrders = orders.filter(order => {
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter
     const matchesPaymentStatus = paymentStatusFilter === 'all' || order.paymentStatus === paymentStatusFilter
-    const customer = Array.isArray(order.expand?.customerId) ? order.expand.customerId[0] : order.expand?.customerId
+    const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
     const matchesSearch = searchQuery === '' || 
       order.orderNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       customer?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -192,10 +193,10 @@ function RouteComponent() {
   // Stats calculations
   const stats = {
     total: orders.length,
-    pending: orders.filter(o => o.status === 'pending').length,
-    confirmed: orders.filter(o => o.status === 'confirmed').length,
-    shipped: orders.filter(o => o.status === 'shipped').length,
-    delivered: orders.filter(o => o.status === 'delivered').length,
+    pending: orders.filter(o => o.status === OrdersStatusOptions.pending).length,
+    confirmed: orders.filter(o => o.status === OrdersStatusOptions.confirmed).length,
+    shipped: orders.filter(o => o.status === OrdersStatusOptions.shipped).length,
+    delivered: orders.filter(o => o.status === OrdersStatusOptions.delivered).length,
     totalRevenue: orders.reduce((sum, o) => sum + (o.total || 0), 0),
     avgOrderValue: orders.length > 0 ? orders.reduce((sum, o) => sum + (o.total || 0), 0) / orders.length : 0
   }
@@ -211,13 +212,13 @@ function RouteComponent() {
         
         switch (action) {
           case 'confirm':
-            updateData = { status: 'confirmed' }
+            updateData = { status: OrdersStatusOptions.confirmed }
             break
           case 'ship':
-            updateData = { status: 'shipped', fulfillmentStatus: 'shipped' }
+            updateData = { status: OrdersStatusOptions.shipped, fulfillmentStatus: OrdersFulfillmentStatusOptions.shipped }
             break
           case 'archive':
-            updateData = { status: 'delivered' }
+            updateData = { status: OrdersStatusOptions.delivered }
             break
         }
         
@@ -239,7 +240,7 @@ function RouteComponent() {
   const handleExport = (format: 'csv' | 'excel') => {
     const headers = ['Order Number', 'Customer', 'Status', 'Payment Status', 'Total', 'Date']
     const data = filteredOrders.map(order => {
-      const customer = Array.isArray(order.expand?.customerId) ? order.expand.customerId[0] : order.expand?.customerId
+      const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
       return [
         order.orderNumber || `#${order.id.slice(-8)}`,
         customer?.full_name || 'Unknown',
@@ -256,7 +257,7 @@ function RouteComponent() {
 
   // Mobile card view component
   const OrderCard = ({ order }: { order: OrdersResponse<any, any, any> }) => {
-    const customer = Array.isArray(order.expand?.customerId) ? order.expand.customerId[0] : order.expand?.customerId
+    const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
     
     return (
       <Card className="p-4 space-y-3">
@@ -296,9 +297,9 @@ function RouteComponent() {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
                 setSelectedOrderForUpdate(order)
-                setNewStatus(order.status || 'pending')
-                setNewPaymentStatus(order.paymentStatus || 'pending')
-                setNewFulfillmentStatus(order.fulfillmentStatus || 'pending')
+                setNewStatus(order.status || OrdersStatusOptions.pending)
+                setNewPaymentStatus(order.paymentStatus || OrdersPaymentStatusOptions.pending)
+                setNewFulfillmentStatus(order.fulfillmentStatus || OrdersFulfillmentStatusOptions.pending)
                 setUpdateDialogOpen(true)
               }}>
                 <Edit3 className="h-4 w-4 mr-2" />
@@ -379,9 +380,9 @@ function RouteComponent() {
       setLoading(false)
       setUpdateDialogOpen(false)
       setSelectedOrderForUpdate(null)
-      setNewStatus('pending')
-      setNewPaymentStatus('pending')
-      setNewFulfillmentStatus('pending')
+      setNewStatus(OrdersStatusOptions.pending)
+      setNewPaymentStatus(OrdersPaymentStatusOptions.pending)
+      setNewFulfillmentStatus(OrdersFulfillmentStatusOptions.pending)
       setTrackingNumber('')
       setUpdateNotes('')
       setEstimatedDelivery('')
@@ -675,7 +676,7 @@ function RouteComponent() {
                     </TableHeader>
                     <TableBody>
                       {filteredOrders.map((order) => {
-                        const customer = Array.isArray(order.expand?.customerId) ? order.expand.customerId[0] : order.expand?.customerId
+                        const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
                         return (
                           <TableRow key={order.id} className="group">
                             <TableCell>
@@ -753,9 +754,9 @@ function RouteComponent() {
                                   </DropdownMenuItem>
                                   <DropdownMenuItem onClick={() => {
                                     setSelectedOrderForUpdate(order)
-                                    setNewStatus(order.status || 'pending')
-                                    setNewPaymentStatus(order.paymentStatus || 'pending')
-                                    setNewFulfillmentStatus(order.fulfillmentStatus || 'pending')
+                                    setNewStatus(order.status || OrdersStatusOptions.pending)
+                                    setNewPaymentStatus(order.paymentStatus || OrdersPaymentStatusOptions.pending)
+                                    setNewFulfillmentStatus(order.fulfillmentStatus || OrdersFulfillmentStatusOptions.pending)
                                     setTrackingNumber(order.trackingNumber || '')
                                     setEstimatedDelivery(order.estimatedDelivery || '')
                                     setUpdateDialogOpen(true)

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -7,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
-import { CreditCard, Truck, CheckCircle } from 'lucide-react'
+import { CreditCard, Truck } from 'lucide-react'
 import type { CartesRecord, OrdersRecord, OrderItemsRecord, CustomersRecord, ProductsResponse, OrdersFulfillmentStatusOptions, OrdersPaymentStatusOptions, OrdersStatusOptions } from '@/lib/types'
 
 import pb from '@/lib/db'
@@ -26,7 +27,7 @@ export function CheckoutModal({
 }: CheckoutModalProps) {
   const [step, setStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
-  const [orderCreated, setOrderCreated] = useState<string | null>(null)
+  const navigate = useNavigate()
   
   const {
     quantity,
@@ -126,8 +127,10 @@ export function CheckoutModal({
       
       // Mock order ID
       const orderId = `ord_${Date.now()}`
-      setOrderCreated(orderId)
-      setStep(4)
+      
+      // Redirect to order confirmation page
+      onClose()
+      navigate({ to: `/order-confirmation/${orderId}` })
       
       console.log('Order created:', {
         orderId,
@@ -146,7 +149,6 @@ export function CheckoutModal({
 
   const resetForm = () => {
     setStep(1)
-    setOrderCreated(null)
     setCustomerInfo({ email: '', fullName: '', phone: '' })
     setShippingAddress({ address: '', city: '', state: '', postalCode: '', country: 'Morocco' })
     setPaymentMethod('cod')
@@ -163,22 +165,12 @@ export function CheckoutModal({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {orderCreated ? (
-              <>
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                Order Confirmed
-              </>
-            ) : (
-              <>
-                <CreditCard className="w-5 h-5" />
-                Checkout
-              </>
-            )}
+            <CreditCard className="w-5 h-5" />
+            Checkout
           </DialogTitle>
         </DialogHeader>
 
-        {!orderCreated ? (
-          <>
+        <div>
             {/* Progress Indicator */}
             <div className="flex items-center gap-2 mb-6">
               {[1, 2, 3].map((stepNum) => (
@@ -460,43 +452,7 @@ export function CheckoutModal({
                 </div>
               </div>
             )}
-          </>
-        ) : (
-          /* Step 4: Order Confirmation */
-          <div className="text-center space-y-6 py-8">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle className="w-8 h-8 text-green-600" />
-            </div>
-            
-            <div>
-              <h3 className="text-2xl font-bold text-green-600 mb-2">Order Placed Successfully!</h3>
-              <p className="text-gray-600">
-                Thank you for your order. We'll send you a confirmation email shortly.
-              </p>
-            </div>
-
-            <Card>
-              <CardContent className="p-6">
-                <div className="text-center space-y-2">
-                  <div className="text-lg font-semibold">Order #{orderCreated}</div>
-                  <div className="text-2xl font-bold text-primary">${finalTotal.toFixed(2)}</div>
-                  <div className="text-sm text-gray-600">
-                    Estimated delivery: {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={handleClose} className="flex-1">
-                Continue Shopping
-              </Button>
-              <Button onClick={() => {/* Navigate to orders */}} className="flex-1">
-                Track Order
-              </Button>
-            </div>
-          </div>
-        )}
+        </div>
       </DialogContent>
     </Dialog>
   )

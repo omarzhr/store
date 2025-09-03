@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Truck, Clock, Zap } from 'lucide-react'
-import { type StoresResponse } from '@/lib/types'
+import { type StoresResponse, type CheckoutSettings } from '@/lib/types'
 
 // Shipping option interface
 interface ShippingOption {
@@ -52,7 +52,7 @@ export function ShippingOptionsForm({
 
   // Use shipping zones from store settings - no fallback to default options
   const shippingZones = storeSettings?.shippingZones || []
-  const checkoutSettings = storeSettings?.checkoutSettings
+  const checkoutSettings: CheckoutSettings | undefined = storeSettings?.checkoutSettings as CheckoutSettings | undefined
 
   let shippingOptions: ShippingOption[] = []
 

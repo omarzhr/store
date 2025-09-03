@@ -13,15 +13,13 @@ import {
   ShoppingCart, 
   Users, 
   Package, 
-  Calendar,
+
   Download,
   RefreshCw,
   BarChart3,
-  PieChart,
-  Activity,
+
   AlertTriangle,
-  Eye,
-  Clock,
+
   Target
 } from 'lucide-react'
 import type { 
@@ -230,7 +228,7 @@ function calculateMetrics(
 }
 
 function AnalyticsComponent() {
-  const { orders, products, customers, categories, orderItems, storeSettings } = Route.useLoaderData()
+  const { orders, products, customers, orderItems, storeSettings } = Route.useLoaderData()
   const [timeRange, setTimeRange] = useState<string>('30d')
   const [isRefreshing, setIsRefreshing] = useState(false)
   

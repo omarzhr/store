@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,11 +9,11 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { Package, Plus, Search, MoreHorizontal, Edit, Eye, Trash2, Copy, CheckSquare, AlertTriangle, Filter, Download, X } from 'lucide-react'
+import { Package, Plus, Search, MoreHorizontal, Edit, Eye, Trash2, Copy, CheckSquare, Filter, Download, X } from 'lucide-react'
 import type { ProductsResponse, CategoriesResponse, StoresResponse } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
@@ -56,8 +56,7 @@ export const Route = createFileRoute('/(protected)/dashboard/_dashboard/products
 })
 
 function ProductsComponent() {
-  const { products: loaderProducts, categories, storeSettings, totalProducts, search } = Route.useLoaderData()
-  const navigate = useNavigate()
+  const { products: loaderProducts, categories, storeSettings } = Route.useLoaderData()
   
   const [products, setProducts] = useState(loaderProducts)
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set())
@@ -72,7 +71,7 @@ function ProductsComponent() {
   const [stockFilter, setStockFilter] = useState<string>('all')
   const [sortBy, setSortBy] = useState<string>('newest')
   const [showFilters, setShowFilters] = useState(false)
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table')
+  const [_viewMode, _setViewMode] = useState<'table' | 'cards'>('table')
 
   // Get currency info from store settings - default to MAD (Moroccan Dirham)
   const currency = storeSettings?.currency || 'MAD'
@@ -128,13 +127,7 @@ function ProductsComponent() {
     setSelectedProducts(newSelected)
   }
 
-  const handleSelectAll = (selected: boolean) => {
-    if (selected) {
-      setSelectedProducts(new Set(products.map(p => p.id)))
-    } else {
-      setSelectedProducts(new Set())
-    }
-  }
+
 
   const handleDeleteProduct = async (productId: string) => {
     setConfirmDeleteId(productId)
@@ -302,8 +295,8 @@ function ProductsComponent() {
       Cost: product.cost,
       Stock: product.stockQuantity ?? 0,
       Status: product.isActive ? 'Active' : 'Inactive',
-      Categories: Array.isArray(product.expand?.categories) 
-        ? product.expand.categories.map(cat => cat.name).join(', ')
+      Categories: Array.isArray((product.expand as any)?.categories) 
+        ? (product.expand as any).categories.map((cat: any) => cat.name).join(', ')
         : '',
       Created: new Date(product.created).toLocaleDateString()
     }))
@@ -713,8 +706,8 @@ function ProductsComponent() {
                                   {product.title}
                                 </p>
                                 <div className="flex flex-wrap gap-1 mt-1">
-                                  {Array.isArray(product.expand?.categories) &&
-                                    product.expand.categories.slice(0, 2).map((cat) => (
+                                  {Array.isArray((product.expand as any)?.categories) &&
+                                    (product.expand as any).categories.slice(0, 2).map((cat: any) => (
                                       <Badge key={cat.id} variant="secondary" className="text-xs">
                                         {cat.name}
                                       </Badge>

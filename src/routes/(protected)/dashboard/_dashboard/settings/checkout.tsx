@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ArrowLeft, Plus, X, GripVertical, Palette, MessageSquare, CreditCard, AlertCircle } from 'lucide-react'
-import type { StoresResponse, StoresRecord } from '@/lib/types'
+import type { StoresResponse, CheckoutSettings } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
 
@@ -93,7 +93,7 @@ function RouteComponent() {
   ]
 
   // Use existing checkoutSettings or defaults
-  const checkoutSettings = storeSettings.checkoutSettings || {
+  const checkoutSettings: CheckoutSettings = storeSettings.checkoutSettings || {
     fields: { 
       phoneRequired: true, 
       companyNameEnabled: false, 
@@ -113,7 +113,7 @@ function RouteComponent() {
   const [configurableFields, setConfigurableFields] = useState(
     checkoutSettings.fields?.configurableFields || defaultFieldsConfig
   )
-  const [customFields, setCustomFields] = useState<string[]>(checkoutSettings.fields?.customFields ?? [])
+  const [customFields] = useState<string[]>(checkoutSettings.fields?.customFields ?? [])
   const [newCustomField, setNewCustomField] = useState('')
 
   // Appearance settings
@@ -132,15 +132,15 @@ function RouteComponent() {
 
   // Field configuration handlers
   const updateFieldConfig = (fieldId: string, updates: Partial<typeof configurableFields[0]>) => {
-    setConfigurableFields(fields =>
-      fields.map(field =>
+    setConfigurableFields((fields: any) =>
+      fields.map((field: any) =>
         field.id === fieldId ? { ...field, ...updates } : field
       )
     )
   }
 
   const moveFieldUp = (fieldId: string) => {
-    const currentIndex = configurableFields.findIndex(f => f.id === fieldId)
+    const currentIndex = configurableFields.findIndex((f: any) => f.id === fieldId)
     if (currentIndex > 0) {
       const newFields = [...configurableFields]
       const temp = newFields[currentIndex]
@@ -157,7 +157,7 @@ function RouteComponent() {
   }
 
   const moveFieldDown = (fieldId: string) => {
-    const currentIndex = configurableFields.findIndex(f => f.id === fieldId)
+    const currentIndex = configurableFields.findIndex((f: any) => f.id === fieldId)
     if (currentIndex < configurableFields.length - 1) {
       const newFields = [...configurableFields]
       const temp = newFields[currentIndex]
@@ -191,9 +191,9 @@ function RouteComponent() {
     // Don't allow removing core fields (but allow disabling them)
     const coreFields = ['fullName', 'phoneNumber', 'email', 'address', 'city']
     if (!coreFields.includes(fieldId)) {
-      setConfigurableFields(fields => 
-        fields.filter(field => field.id !== fieldId)
-          .map((field, index) => ({ ...field, order: index + 1 }))
+      setConfigurableFields((fields: any) =>
+        fields.filter((field: any) => field.id !== fieldId)
+          .map((field: any, index: any) => ({ ...field, order: index + 1 }))
       )
     }
   }
@@ -205,10 +205,10 @@ function RouteComponent() {
     try {
       const updatedCheckoutSettings = {
         fields: {
-          phoneRequired: configurableFields.find(f => f.id === 'phoneNumber')?.required ?? true,
-          companyNameEnabled: configurableFields.find(f => f.id === 'companyName')?.enabled ?? false,
-          emailEnabled: configurableFields.find(f => f.id === 'email')?.enabled ?? true,
-          addressEnabled: configurableFields.find(f => f.id === 'address')?.enabled ?? true,
+          phoneRequired: configurableFields.find((f: any) => f.id === 'phoneNumber')?.required ?? true,
+          companyNameEnabled: configurableFields.find((f: any) => f.id === 'companyName')?.enabled ?? false,
+          emailEnabled: configurableFields.find((f: any) => f.id === 'email')?.enabled ?? true,
+          addressEnabled: configurableFields.find((f: any) => f.id === 'address')?.enabled ?? true,
           customFields,
           configurableFields
         },
@@ -326,8 +326,8 @@ function RouteComponent() {
                 
                 <div className="space-y-3">
                   {configurableFields
-                    .sort((a, b) => a.order - b.order)
-                    .map((field, index) => (
+                    .sort((a: any, b: any) => a.order - b.order)
+                    .map((field: any, index: any) => (
                     <div key={field.id} className="border rounded-lg p-4 bg-white">
                       <div className="flex items-start gap-3">
                         {/* Drag Handle & Order Controls */}
@@ -482,9 +482,9 @@ function RouteComponent() {
                 <div className="border rounded-lg p-4 bg-gray-50">
                   <div className="space-y-3">
                     {configurableFields
-                      .filter(field => field.enabled)
-                      .sort((a, b) => a.order - b.order)
-                      .map((field) => (
+                      .filter((field: any) => field.enabled)
+                      .sort((a: any, b: any) => a.order - b.order)
+                      .map((field: any) => (
                       <div key={field.id} className="space-y-1">
                         <Label className="text-sm font-medium">
                           {field.label} {field.required && <span className="text-red-500">*</span>}

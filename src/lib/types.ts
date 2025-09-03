@@ -341,3 +341,37 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'stores'): RecordService<StoresResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
 }
+
+// Custom types for checkout settings
+export interface ConfigurableField {
+	id: string
+	label: string
+	required: boolean
+	enabled: boolean
+	order: number
+}
+
+export interface CheckoutSettings {
+	fields?: {
+		phoneRequired?: boolean
+		companyNameEnabled?: boolean
+		emailEnabled?: boolean
+		addressEnabled?: boolean
+		customFields?: string[]
+		configurableFields?: ConfigurableField[]
+	}
+	appearance?: {
+		primaryColor?: string
+		buttonText?: string
+		submitButtonText?: string
+	}
+	features?: {
+		guestCheckoutEnabled?: boolean
+		showOrderSummary?: boolean
+		enableCouponCodes?: boolean
+	}
+	messages?: {
+		thankYouMessage?: string
+		processingMessage?: string
+	}
+}

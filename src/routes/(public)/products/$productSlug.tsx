@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import type { ProductsResponse, CategoriesResponse, StoresResponse,OrdersRecord, OrderItemsRecord, CustomersRecord } from '@/lib/types'
 import { Collections } from '@/lib/types'
@@ -141,8 +141,9 @@ function CheckoutForm({
     productTitle: product.title
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [orderCreated, setOrderCreated] = useState<string | null>(null)
+
   const [formData, setFormData] = useState<Record<string, string>>({})
+  const navigate = useNavigate()
 
   const shippingCost = 25 // Fixed shipping cost
   const finalTotal = totalPrice + shippingCost
@@ -256,13 +257,14 @@ function CheckoutForm({
         })
       }
 
-      setOrderCreated(order.orderNumber || order.id)
-
       console.log('Order created successfully:', {
         orderId: order.id,
         orderNumber: order.orderNumber,
         total: finalTotal
       })
+
+      // Redirect to order confirmation page
+      navigate({ to: `/order-confirmation/${order.id}` })
 
     } catch (error) {
       console.error('Failed to create order:', error)
@@ -363,36 +365,7 @@ function CheckoutForm({
     }
   }
 
-  if (orderCreated) {
-    return (
-      <Card className="mt-8">
-        <CardContent className="p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="w-8 h-8 text-green-600" />
-          </div>
 
-          <h3 className="text-2xl font-bold text-green-600 mb-2">
-            {checkoutSettings?.messages?.thankYouMessage || 'Order Placed Successfully!'}
-          </h3>
-          <p className="text-gray-600 mb-4">
-            {checkoutSettings?.messages?.processingMessage || "Thank you for your order. We'll send you a confirmation email shortly."}
-          </p>
-
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <div className="text-lg font-semibold">Order #{orderCreated}</div>
-            <div className="text-2xl font-bold text-primary">${finalTotal.toFixed(2)}</div>
-            <div className="text-sm text-gray-600">
-              Estimated delivery: {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}
-            </div>
-          </div>
-
-          <Button onClick={() => window.location.href = '/'} className="w-full">
-            Continue Shopping
-          </Button>
-        </CardContent>
-      </Card>
-    )
-  }
 
   return (
     <Card className="mt-8">

@@ -29,7 +29,7 @@ import type { StoresResponse, CategoriesResponse} from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
 import { CategoryManagementSection } from '@/components/homeComponents/CategoryManagementSection'
-import { FileUploadArea } from '@/components/homeComponents/FileUploadArea'
+
 import { LogoSection } from '@/components/homeComponents/LogoSection'
 import { CategoryImageManager } from '@/components/homeComponents/categogyComponent'
 import { createCategoryManagementHandlers } from '@/components/homeComponents/createCategoryManagementHandlers'
@@ -105,7 +105,7 @@ function HomeSettingsComponent() {
   )
   const [showCategoryImages, setShowCategoryImages] = useState(existingSettings.categories?.showImages ?? true)
   const [categoryImageFiles, setCategoryImageFiles] = useState<Record<string, File>>({})
-  const [categoryImageType, setCategoryImageType] = useState<Record<string, 'upload' | 'url'>>({})
+  const [_categoryImageType, _setCategoryImageType] = useState<Record<string, 'upload' | 'url'>>({})
   const [removeCategoryImages, setRemoveCategoryImages] = useState<string[]>([])
 
   // Featured Products Settings

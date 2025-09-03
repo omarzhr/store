@@ -2,32 +2,28 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Edit } from 'lucide-react'
-import { type CartesResponse, type ProductsResponse, type StoresResponse } from '@/lib/types'
+import { type StoresResponse } from '@/lib/types'
 import { formatPrice } from '@/lib/cart-utils'
 
 interface OrderReviewProps {
   customerInfo: any
   shippingAddress: any
-  selectedShippingOption: string
-  cartItems: CartesResponse<{ productId: ProductsResponse[] }>[]
+
   cartSummary: any
   onEdit: (step: number) => void
   storeSettings: StoresResponse | null
   hasShippingZones?: boolean
-  enableShippingStep?: boolean
+
   enableShippingOptions?: boolean
 }
 
 export function OrderReview({
   customerInfo,
   shippingAddress,
-  selectedShippingOption,
-  cartItems,
   cartSummary,
   onEdit,
   storeSettings,
   hasShippingZones = false,
-  enableShippingStep = true,
   enableShippingOptions = true
 }: OrderReviewProps) {
   return (

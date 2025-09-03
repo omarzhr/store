@@ -12,11 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as protectedDashboardRouteRouteImport } from './routes/(protected)/dashboard/route'
+import { Route as publicWishlistIndexRouteImport } from './routes/(public)/wishlist/index'
 import { Route as publicSearchIndexRouteImport } from './routes/(public)/search/index'
 import { Route as publicProductsIndexRouteImport } from './routes/(public)/products/index'
-import { Route as publicOrderConfirmationIndexRouteImport } from './routes/(public)/order-confirmation/index'
 import { Route as publicCheckoutIndexRouteImport } from './routes/(public)/checkout/index'
 import { Route as publicCartIndexRouteImport } from './routes/(public)/cart/index'
+import { Route as publicAccountIndexRouteImport } from './routes/(public)/account/index'
 import { Route as publicProductsProductSlugRouteImport } from './routes/(public)/products/$productSlug'
 import { Route as publicOrderConfirmationOrderIdRouteImport } from './routes/(public)/order-confirmation/$orderId'
 import { Route as protectedDashboardDashboardIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/index'
@@ -49,6 +50,11 @@ const protectedDashboardRouteRoute = protectedDashboardRouteRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const publicWishlistIndexRoute = publicWishlistIndexRouteImport.update({
+  id: '/wishlist/',
+  path: '/wishlist/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
 const publicSearchIndexRoute = publicSearchIndexRouteImport.update({
   id: '/search/',
   path: '/search/',
@@ -59,12 +65,6 @@ const publicProductsIndexRoute = publicProductsIndexRouteImport.update({
   path: '/products/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const publicOrderConfirmationIndexRoute =
-  publicOrderConfirmationIndexRouteImport.update({
-    id: '/order-confirmation/',
-    path: '/order-confirmation/',
-    getParentRoute: () => publicRouteRoute,
-  } as any)
 const publicCheckoutIndexRoute = publicCheckoutIndexRouteImport.update({
   id: '/checkout/',
   path: '/checkout/',
@@ -73,6 +73,11 @@ const publicCheckoutIndexRoute = publicCheckoutIndexRouteImport.update({
 const publicCartIndexRoute = publicCartIndexRouteImport.update({
   id: '/cart/',
   path: '/cart/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+const publicAccountIndexRoute = publicAccountIndexRouteImport.update({
+  id: '/account/',
+  path: '/account/',
   getParentRoute: () => publicRouteRoute,
 } as any)
 const publicProductsProductSlugRoute =
@@ -185,11 +190,12 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof protectedDashboardRouteRouteWithChildren
   '/order-confirmation/$orderId': typeof publicOrderConfirmationOrderIdRoute
   '/products/$productSlug': typeof publicProductsProductSlugRoute
+  '/account': typeof publicAccountIndexRoute
   '/cart': typeof publicCartIndexRoute
   '/checkout': typeof publicCheckoutIndexRoute
-  '/order-confirmation': typeof publicOrderConfirmationIndexRoute
   '/products': typeof publicProductsIndexRoute
   '/search': typeof publicSearchIndexRoute
+  '/wishlist': typeof publicWishlistIndexRoute
   '/dashboard/': typeof protectedDashboardDashboardIndexRoute
   '/dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
   '/dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
@@ -210,11 +216,12 @@ export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
   '/order-confirmation/$orderId': typeof publicOrderConfirmationOrderIdRoute
   '/products/$productSlug': typeof publicProductsProductSlugRoute
+  '/account': typeof publicAccountIndexRoute
   '/cart': typeof publicCartIndexRoute
   '/checkout': typeof publicCheckoutIndexRoute
-  '/order-confirmation': typeof publicOrderConfirmationIndexRoute
   '/products': typeof publicProductsIndexRoute
   '/search': typeof publicSearchIndexRoute
+  '/wishlist': typeof publicWishlistIndexRoute
   '/dashboard': typeof protectedDashboardDashboardIndexRoute
   '/dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
   '/dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
@@ -238,11 +245,12 @@ export interface FileRoutesById {
   '/(public)/': typeof publicIndexRoute
   '/(public)/order-confirmation/$orderId': typeof publicOrderConfirmationOrderIdRoute
   '/(public)/products/$productSlug': typeof publicProductsProductSlugRoute
+  '/(public)/account/': typeof publicAccountIndexRoute
   '/(public)/cart/': typeof publicCartIndexRoute
   '/(public)/checkout/': typeof publicCheckoutIndexRoute
-  '/(public)/order-confirmation/': typeof publicOrderConfirmationIndexRoute
   '/(public)/products/': typeof publicProductsIndexRoute
   '/(public)/search/': typeof publicSearchIndexRoute
+  '/(public)/wishlist/': typeof publicWishlistIndexRoute
   '/(protected)/dashboard/_dashboard/': typeof protectedDashboardDashboardIndexRoute
   '/(protected)/dashboard/_dashboard/products/new': typeof protectedDashboardDashboardProductsNewRoute
   '/(protected)/dashboard/_dashboard/products/sgfgsfg': typeof protectedDashboardDashboardProductsSgfgsfgRoute
@@ -266,11 +274,12 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/order-confirmation/$orderId'
     | '/products/$productSlug'
+    | '/account'
     | '/cart'
     | '/checkout'
-    | '/order-confirmation'
     | '/products'
     | '/search'
+    | '/wishlist'
     | '/dashboard/'
     | '/dashboard/products/new'
     | '/dashboard/products/sgfgsfg'
@@ -291,11 +300,12 @@ export interface FileRouteTypes {
     | '/'
     | '/order-confirmation/$orderId'
     | '/products/$productSlug'
+    | '/account'
     | '/cart'
     | '/checkout'
-    | '/order-confirmation'
     | '/products'
     | '/search'
+    | '/wishlist'
     | '/dashboard'
     | '/dashboard/products/new'
     | '/dashboard/products/sgfgsfg'
@@ -318,11 +328,12 @@ export interface FileRouteTypes {
     | '/(public)/'
     | '/(public)/order-confirmation/$orderId'
     | '/(public)/products/$productSlug'
+    | '/(public)/account/'
     | '/(public)/cart/'
     | '/(public)/checkout/'
-    | '/(public)/order-confirmation/'
     | '/(public)/products/'
     | '/(public)/search/'
+    | '/(public)/wishlist/'
     | '/(protected)/dashboard/_dashboard/'
     | '/(protected)/dashboard/_dashboard/products/new'
     | '/(protected)/dashboard/_dashboard/products/sgfgsfg'
@@ -368,6 +379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(public)/wishlist/': {
+      id: '/(public)/wishlist/'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof publicWishlistIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
     '/(public)/search/': {
       id: '/(public)/search/'
       path: '/search'
@@ -382,13 +400,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicProductsIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/(public)/order-confirmation/': {
-      id: '/(public)/order-confirmation/'
-      path: '/order-confirmation'
-      fullPath: '/order-confirmation'
-      preLoaderRoute: typeof publicOrderConfirmationIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
     '/(public)/checkout/': {
       id: '/(public)/checkout/'
       path: '/checkout'
@@ -401,6 +412,13 @@ declare module '@tanstack/react-router' {
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof publicCartIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/account/': {
+      id: '/(public)/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof publicAccountIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/products/$productSlug': {
@@ -529,22 +547,24 @@ interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
   publicOrderConfirmationOrderIdRoute: typeof publicOrderConfirmationOrderIdRoute
   publicProductsProductSlugRoute: typeof publicProductsProductSlugRoute
+  publicAccountIndexRoute: typeof publicAccountIndexRoute
   publicCartIndexRoute: typeof publicCartIndexRoute
   publicCheckoutIndexRoute: typeof publicCheckoutIndexRoute
-  publicOrderConfirmationIndexRoute: typeof publicOrderConfirmationIndexRoute
   publicProductsIndexRoute: typeof publicProductsIndexRoute
   publicSearchIndexRoute: typeof publicSearchIndexRoute
+  publicWishlistIndexRoute: typeof publicWishlistIndexRoute
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicIndexRoute: publicIndexRoute,
   publicOrderConfirmationOrderIdRoute: publicOrderConfirmationOrderIdRoute,
   publicProductsProductSlugRoute: publicProductsProductSlugRoute,
+  publicAccountIndexRoute: publicAccountIndexRoute,
   publicCartIndexRoute: publicCartIndexRoute,
   publicCheckoutIndexRoute: publicCheckoutIndexRoute,
-  publicOrderConfirmationIndexRoute: publicOrderConfirmationIndexRoute,
   publicProductsIndexRoute: publicProductsIndexRoute,
   publicSearchIndexRoute: publicSearchIndexRoute,
+  publicWishlistIndexRoute: publicWishlistIndexRoute,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(

@@ -2,120 +2,41 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { CheckCircle, Copy, Package, Calendar, MapPin, Phone, Mail, ArrowRight, Download, HeadphonesIcon } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { CheckCircle, Copy, Package, Calendar, MapPin, Phone, Mail, ArrowRight, Download, HeadphonesIcon, Truck } from 'lucide-react'
 import { useState } from 'react'
-
-// Mock data types for order confirmation
-interface MockCustomerInfo {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-}
-
-interface MockShippingAddress {
-  addressLine1: string;
-  addressLine2?: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
-
-interface MockCartItem {
-  id: string;
-  productId: string;
-  productName: string;
-  productImage: string;
-  selectedVariants: { type: string; value: string }[];
-  quantity: number;
-  price: number;
-  originalPrice?: number;
-  inStock: boolean;
-  slug: string;
-}
-
-interface MockCartSummary {
-  subtotal: number;
-  shipping: number;
-  tax: number;
-  total: number;
-  itemCount: number;
-}
-
-interface MockOrder {
-  id: string;
-  orderNumber: string;
-  status: 'pending' | 'confirmed' | 'preparing' | 'shipped' | 'delivered';
-  items: MockCartItem[];
-  customer: MockCustomerInfo;
-  shipping: MockShippingAddress;
-  summary: MockCartSummary;
-  estimatedDelivery: string;
-  trackingNumber?: string;
-  placedAt: string;
-}
+import type { OrdersResponse, OrderItemsResponse, CustomersResponse, ProductsResponse } from '@/lib/types'
+import { Collections } from '@/lib/types'
+import pb from '@/lib/db'
 
 export const Route = createFileRoute('/(public)/order-confirmation/$orderId')({
-  loader: ({ params }) => {
-    // Mock order data - in real app, this would fetch from API
-    const mockOrder: MockOrder = {
-      id: params.orderId,
-      orderNumber: `ORD-${Date.now().toString().slice(-6)}`,
-      status: 'pending',
-      items: [
-        {
-          id: 'cart-1',
-          productId: '1',
-          productName: 'Wireless Bluetooth Headphones Pro Max',
-          productImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-          selectedVariants: [
-            { type: 'color', value: 'Black' },
-            { type: 'size', value: 'Large' }
-          ],
-          quantity: 2,
-          price: 89.99,
-          originalPrice: 99.99,
-          inStock: true,
-          slug: 'wireless-bluetooth-headphones-pro-max'
-        }
-      ],
-      customer: {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '+1 (555) 123-4567'
-      },
-      shipping: {
-        addressLine1: '123 Main Street',
-        addressLine2: 'Apt 4B',
-        city: 'New York',
-        state: 'New York',
-        zipCode: '10001',
-        country: 'US'
-      },
-      summary: {
-        subtotal: 179.98,
-        shipping: 9.99,
-        tax: 18.00,
-        total: 207.97,
-        itemCount: 2
-      },
-      estimatedDelivery: '2024-01-15',
-      placedAt: new Date().toISOString()
-    }
+  loader: async ({ params }) => {
+    try {
+      // Fetch the order with expanded data
+      const order = await pb.collection(Collections.Orders).getOne<OrdersResponse<{
+        customerId: CustomersResponse,
+        'order_items(orderId)': OrderItemsResponse<{
+          products: ProductsResponse[]
+        }>[]
+      }>>(params.orderId, {
+        expand: 'customerId,order_items(orderId).products'
+      })
 
-    return { order: mockOrder }
+      return { order }
+    } catch (error) {
+      console.error('Failed to fetch order:', error)
+      throw new Error('Order not found')
+    }
   },
   component: RouteComponent,
 })
 
-// Order Header Component
-function OrderHeader({ order }: { order: MockOrder }) {
+// Order Header Component  
+function OrderHeader({ order }: { order: OrdersResponse<any> }) {
   const [orderNumberCopied, setOrderNumberCopied] = useState(false)
 
   const copyOrderNumber = () => {
-    navigator.clipboard.writeText(order.orderNumber)
+    navigator.clipboard.writeText(order.orderNumber || order.id)
     setOrderNumberCopied(true)
     setTimeout(() => setOrderNumberCopied(false), 2000)
   }
@@ -144,7 +65,7 @@ function OrderHeader({ order }: { order: MockOrder }) {
         <div className="flex items-center justify-center gap-2">
           <span className="text-sm text-gray-500">Order Number:</span>
           <span className="text-lg font-mono font-semibold text-gray-900">
-            {order.orderNumber}
+            {order.orderNumber || order.id}
           </span>
           <Button
             variant="ghost"
@@ -162,7 +83,7 @@ function OrderHeader({ order }: { order: MockOrder }) {
 
       {/* Order Date */}
       <p className="text-sm text-gray-500">
-        Placed on {new Date(order.placedAt).toLocaleDateString('en-US', {
+        Placed on {new Date(order.created).toLocaleDateString('en-US', {
           weekday: 'long',
           year: 'numeric',
           month: 'long',
@@ -174,7 +95,7 @@ function OrderHeader({ order }: { order: MockOrder }) {
 }
 
 // COD Instructions Component
-function CODInstructions({ order }: { order: MockOrder }) {
+function CODInstructions({ order }: { order: OrdersResponse<any> }) {
   return (
     <Card className="border-amber-200 bg-amber-50">
       <CardHeader>
@@ -187,7 +108,7 @@ function CODInstructions({ order }: { order: MockOrder }) {
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-gray-600">Amount to pay on delivery:</span>
             <span className="text-xl font-bold text-gray-900">
-              ${order.summary.total.toFixed(2)}
+              ${(order.total || 0).toFixed(2)}
             </span>
           </div>
           <p className="text-xs text-gray-500">
@@ -222,54 +143,71 @@ function CODInstructions({ order }: { order: MockOrder }) {
 }
 
 // Order Items List Component
-function OrderItemsList({ order }: { order: MockOrder }) {
+function OrderItemsList({ order }: { order: OrdersResponse<{
+  'order_items(orderId)': OrderItemsResponse<{
+    products: ProductsResponse[]
+  }>[]
+}> }) {
+  // Get order items from expanded data
+  const orderItems = (order.expand as any)?.['order_items(orderId)'] || []
+  
+  // Calculate summary from order items
+  const calculateSummary = () => {
+    const subtotal = orderItems.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0)
+    const shipping = order.shipping || 0
+    const tax = 0 // Tax is not stored separately in the current schema
+    const total = order.total || (subtotal + shipping + tax)
+    const itemCount = orderItems.reduce((sum: number, item: any) => sum + item.quantity, 0)
+    
+    return { subtotal, shipping, tax, total, itemCount }
+  }
+  
+  const summary = calculateSummary()
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <Package className="w-5 h-5" />
-          Order Items ({order.summary.itemCount})
+          Order Items ({summary.itemCount})
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {order.items.map((item) => (
-          <div key={item.id} className="flex gap-3">
-            <img
-              src={item.productImage}
-              alt={item.productName}
-              className="w-16 h-16 object-cover rounded border"
-            />
-            <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-sm line-clamp-2 leading-tight">
-                {item.productName}
-              </h4>
-              {item.selectedVariants.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {item.selectedVariants.map((variant, index) => (
-                    <span key={index} className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                      {variant.value}
-                    </span>
-                  ))}
+        {orderItems.map((item: any) => {
+          const product = Array.isArray(item.expand?.products) ? item.expand.products[0] : item.expand?.products
+          return (
+            <div key={item.id} className="flex gap-3">
+              <img
+                src={product?.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'}
+                alt={product?.name || 'Product'}
+                className="w-16 h-16 object-cover rounded border"
+              />
+              <div className="flex-1 min-w-0">
+                <h4 className="font-medium text-sm line-clamp-2 leading-tight">
+                  {product?.name || 'Product'}
+                </h4>
+                {item.selectedVariants && (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {Object.entries(item.selectedVariants as any).map(([, value], index) => (
+                      <span key={index} className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                        {value as string}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="flex items-center gap-2 text-xs text-gray-600 mt-2">
+                  <span>Qty: {item.quantity}</span>
+                  <span>•</span>
+                  <span>${item.price.toFixed(2)} each</span>
                 </div>
-              )}
-              <div className="flex items-center gap-2 text-xs text-gray-600 mt-2">
-                <span>Qty: {item.quantity}</span>
-                <span>•</span>
-                <span>${item.price.toFixed(2)} each</span>
+              </div>
+              <div className="text-right">
+                <div className="font-semibold text-sm">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="font-semibold text-sm">
-                ${(item.price * item.quantity).toFixed(2)}
-              </div>
-              {item.originalPrice && item.originalPrice > item.price && (
-                <div className="text-xs text-gray-500 line-through">
-                  ${(item.originalPrice * item.quantity).toFixed(2)}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+          )
+        })}
 
         <Separator />
 
@@ -277,22 +215,22 @@ function OrderItemsList({ order }: { order: MockOrder }) {
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span>Subtotal</span>
-            <span>${order.summary.subtotal.toFixed(2)}</span>
+            <span>${summary.subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span>Shipping</span>
-            <span>${order.summary.shipping.toFixed(2)}</span>
+            <span>${summary.shipping.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span>Tax</span>
-            <span>${order.summary.tax.toFixed(2)}</span>
+            <span>${summary.tax.toFixed(2)}</span>
           </div>
           
           <Separator />
           
           <div className="flex justify-between font-semibold">
             <span>Total</span>
-            <span className="text-primary">${order.summary.total.toFixed(2)}</span>
+            <span className="text-primary">${summary.total.toFixed(2)}</span>
           </div>
         </div>
       </CardContent>
@@ -301,7 +239,42 @@ function OrderItemsList({ order }: { order: MockOrder }) {
 }
 
 // Delivery Info Component
-function DeliveryInfo({ order }: { order: MockOrder }) {
+function DeliveryInfo({ order }: { order: OrdersResponse<{
+  customerId: CustomersResponse
+}> }) {
+  // Get customer info from expanded data
+  const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
+  const customerInfo = order.customerInfo as any
+  
+  // Use customer info from the order or fallback to expanded customer
+  const firstName = customerInfo?.firstName || customer?.firstName || 'Customer'
+  const lastName = customerInfo?.lastName || customer?.lastName || ''
+  const email = customerInfo?.email || customer?.email || ''
+  const phone = customerInfo?.phone || customer?.phone || ''
+  
+  // Parse shipping address from order
+  const shippingInfo = order.shippingAddress as any || {}
+  
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      pending: { variant: 'secondary' as const, icon: Package, label: 'Order Pending', color: 'text-yellow-600' },
+      confirmed: { variant: 'default' as const, icon: CheckCircle, label: 'Order Confirmed', color: 'text-green-600' },
+      preparing: { variant: 'default' as const, icon: Package, label: 'Preparing Order', color: 'text-blue-600' },
+      shipped: { variant: 'default' as const, icon: Truck, label: 'Order Shipped', color: 'text-purple-600' },
+      delivered: { variant: 'default' as const, icon: CheckCircle, label: 'Order Delivered', color: 'text-green-600' },
+      cancelled: { variant: 'destructive' as const, icon: Package, label: 'Order Cancelled', color: 'text-red-600' }
+    }
+
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending
+    const Icon = config.icon
+
+    return (
+      <div className="flex items-center gap-2">
+        <Icon className={`h-5 w-5 ${config.color}`} />
+        <Badge variant={config.variant}>{config.label}</Badge>
+      </div>
+    )
+  }
   return (
     <Card>
       <CardHeader>
@@ -311,23 +284,15 @@ function DeliveryInfo({ order }: { order: MockOrder }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Estimated Delivery */}
+        {/* Order Status */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <Calendar className="w-5 h-5 text-blue-600 mt-0.5" />
-            <div>
-              <div className="font-medium text-sm text-blue-900">
-                Estimated Delivery
+            <div className="flex-1">
+              <div className="font-medium text-sm text-blue-900 mb-2">
+                Current Status
               </div>
-              <div className="text-sm text-blue-700">
-                {new Date(order.estimatedDelivery).toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </div>
-              <div className="text-xs text-blue-600 mt-1">
+              {getStatusBadge(order.status)}
+              <div className="text-xs text-blue-600 mt-2">
                 We'll contact you before delivery
               </div>
             </div>
@@ -341,15 +306,15 @@ function DeliveryInfo({ order }: { order: MockOrder }) {
             <span className="font-medium text-sm">Shipping Address</span>
           </div>
           <div className="text-sm text-gray-700 ml-6 space-y-1">
-            <div>{order.customer.firstName} {order.customer.lastName}</div>
-            <div>{order.shipping.addressLine1}</div>
-            {order.shipping.addressLine2 && (
-              <div>{order.shipping.addressLine2}</div>
+            <div>{firstName} {lastName}</div>
+            <div>{shippingInfo.address || shippingInfo.addressLine1 || 'Address not provided'}</div>
+            {shippingInfo.addressLine2 && (
+              <div>{shippingInfo.addressLine2}</div>
             )}
             <div>
-              {order.shipping.city}, {order.shipping.state} {order.shipping.zipCode}
+              {shippingInfo.city || ''}{shippingInfo.city && shippingInfo.state ? ', ' : ''}{shippingInfo.state || ''} {shippingInfo.zipCode || shippingInfo.postalCode || ''}
             </div>
-            <div>{order.shipping.country}</div>
+            <div>{shippingInfo.country || 'Morocco'}</div>
           </div>
         </div>
 
@@ -362,11 +327,11 @@ function DeliveryInfo({ order }: { order: MockOrder }) {
           <div className="text-sm text-gray-700 ml-6 space-y-1">
             <div className="flex items-center gap-2">
               <Mail className="w-3 h-3" />
-              <span>{order.customer.email}</span>
+              <span>{email || 'Email not provided'}</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-3 h-3" />
-              <span>{order.customer.phone}</span>
+              <span>{phone || 'Phone not provided'}</span>
             </div>
           </div>
         </div>
@@ -380,30 +345,52 @@ function RouteComponent() {
   const navigate = useNavigate()
 
   const handleDownloadReceipt = () => {
-    // Mock PDF download - in real app, this would generate and download actual PDF
+    // Get order items and customer info
+    const orderItems = (order.expand as any)?.['order_items(orderId)'] || []
+    const customer = Array.isArray((order.expand as any)?.customerId) ? (order.expand as any).customerId[0] : (order.expand as any)?.customerId
+    const customerInfo = order.customerInfo as any
+    
+    const firstName = customerInfo?.firstName || customer?.firstName || 'Customer'
+    const lastName = customerInfo?.lastName || customer?.lastName || ''
+    
+    // Calculate totals
+    const subtotal = orderItems.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0)
+    const shipping = order.shipping || 0
+    const tax = 0 // Tax is not stored separately in the current schema
+    const total = order.total || (subtotal + shipping + tax)
+    
     const receiptContent = `
 Order Receipt
-Order Number: ${order.orderNumber}
-Date: ${new Date(order.placedAt).toLocaleDateString()}
-Customer: ${order.customer.firstName} ${order.customer.lastName}
-Total: $${order.summary.total.toFixed(2)}
+==============
+
+Order Number: ${order.orderNumber || order.id}
+Date: ${new Date(order.created).toLocaleDateString()}
+Customer: ${firstName} ${lastName}
+Status: ${order.status}
 
 Items:
-${order.items.map(item => `- ${item.productName} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+${orderItems.map((item: any) => {
+  const product = Array.isArray(item.expand?.products) ? item.expand.products[0] : item.expand?.products
+  return `- ${product?.name || 'Product'} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`
+}).join('\n')}
 
-Subtotal: $${order.summary.subtotal.toFixed(2)}
-Shipping: $${order.summary.shipping.toFixed(2)}
-Tax: $${order.summary.tax.toFixed(2)}
-Total: $${order.summary.total.toFixed(2)}
+Summary:
+Subtotal: $${subtotal.toFixed(2)}
+Shipping: $${shipping.toFixed(2)}
+Tax: $${tax.toFixed(2)}
+Total: $${total.toFixed(2)}
 
 Payment Method: Cash on Delivery
+
+Thank you for your order!
     `
     
+    // Create and download as a text file
     const blob = new Blob([receiptContent], { type: 'text/plain' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `receipt-${order.orderNumber}.txt`
+    link.download = `receipt-${order.orderNumber || order.id}.txt`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)

@@ -57,7 +57,7 @@ export function ShippingAddressForm({
 }: ShippingAddressFormProps) {
   const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const [isAddressInputFocused, setIsAddressInputFocused] = useState(false)
+  const [_isAddressInputFocused, setIsAddressInputFocused] = useState(false)
 
   // Mock address suggestions - in real app, this would be an API call
   const mockAddressSuggestions: AddressSuggestion[] = [
@@ -108,7 +108,7 @@ export function ShippingAddressForm({
     }
   ]
 
-  const handleBlur = (field: keyof ShippingAddress) => {
+  const handleBlur = (_field: keyof ShippingAddress) => {
     onValidate()
   }
 

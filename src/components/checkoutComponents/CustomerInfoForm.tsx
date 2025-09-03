@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { User, Mail, Phone, MapPin, Building } from 'lucide-react'
-import { type StoresResponse } from '@/lib/types'
+import { type StoresResponse, type CheckoutSettings } from '@/lib/types'
 
 interface CustomerInfoFormProps {
   customerInfo: any
@@ -10,7 +10,6 @@ interface CustomerInfoFormProps {
   onChange: (field: string, value: string) => void
   onValidate: () => any
   storeSettings: StoresResponse | null
-  includeDeliveryAddress?: boolean
 }
 
 export function CustomerInfoForm({
@@ -18,11 +17,10 @@ export function CustomerInfoForm({
   errors,
   onChange,
   onValidate,
-  storeSettings,
-  includeDeliveryAddress = false
+  storeSettings
 }: CustomerInfoFormProps) {
   // Get checkout customization settings with configurable fields
-  const checkoutSettings = storeSettings?.checkoutSettings || {
+  const checkoutSettings: CheckoutSettings = storeSettings?.checkoutSettings || {
     fields: { 
       phoneRequired: true, 
       companyNameEnabled: false, 
@@ -40,7 +38,7 @@ export function CustomerInfoForm({
     messages: { thankYouMessage: '', processingMessage: '' }
   }
 
-  const handleBlur = (field: string) => {
+  const handleBlur = () => {
     onValidate()
   }
 
@@ -69,7 +67,7 @@ export function CustomerInfoForm({
             placeholder="Enter email address"
             value={fieldValue}
             onChange={(e) => onChange(fieldId, e.target.value)}
-            onBlur={() => handleBlur(fieldId)}
+            onBlur={handleBlur}
             className={`h-11 ${errors[fieldId] ? 'border-red-500 focus:border-red-500' : ''}`}
           />
           {errors[fieldId] && (
@@ -94,7 +92,7 @@ export function CustomerInfoForm({
             placeholder={`Enter ${fieldLabel.toLowerCase()}`}
             value={fieldValue}
             onChange={(e) => onChange(fieldId, e.target.value)}
-            onBlur={() => handleBlur(fieldId)}
+            onBlur={handleBlur}
             className={`h-11 ${errors[fieldId] ? 'border-red-500 focus:border-red-500' : ''}`}
             style={{ 
               borderColor: errors[fieldId] ? undefined : `${checkoutSettings.appearance?.primaryColor}20`,
@@ -121,7 +119,7 @@ export function CustomerInfoForm({
             placeholder={`Enter ${fieldLabel.toLowerCase()}`}
             value={fieldValue}
             onChange={(e) => onChange(fieldId, e.target.value)}
-            onBlur={() => handleBlur(fieldId)}
+            onBlur={handleBlur}
             className={`h-11 ${errors[fieldId] ? 'border-red-500 focus:border-red-500' : ''}`}
           />
           {errors[fieldId] && (
@@ -147,7 +145,7 @@ export function CustomerInfoForm({
             placeholder="Enter your address"
             value={fieldValue}
             onChange={(e) => onChange(fieldId, e.target.value)}
-            onBlur={() => handleBlur(fieldId)}
+            onBlur={handleBlur}
             className={`h-11 ${errors[fieldId] ? 'border-red-500 focus:border-red-500' : ''}`}
           />
           {errors[fieldId] && (
@@ -172,7 +170,7 @@ export function CustomerInfoForm({
             placeholder={`Enter ${fieldLabel.toLowerCase()}`}
             value={fieldValue}
             onChange={(e) => onChange(fieldId, e.target.value)}
-            onBlur={() => handleBlur(fieldId)}
+            onBlur={handleBlur}
             className={`h-11 ${errors[fieldId] ? 'border-red-500 focus:border-red-500' : ''}`}
           />
           {errors[fieldId] && (
@@ -195,7 +193,7 @@ export function CustomerInfoForm({
             placeholder={`Enter ${fieldLabel.toLowerCase()}`}
             value={fieldValue}
             onChange={(e) => onChange(fieldId, e.target.value)}
-            onBlur={() => handleBlur(fieldId)}
+            onBlur={handleBlur}
             className={`h-11 ${errors[fieldId] ? 'border-red-500 focus:border-red-500' : ''}`}
           />
           {errors[fieldId] && (
@@ -217,7 +215,7 @@ export function CustomerInfoForm({
           placeholder={`Enter ${fieldLabel.toLowerCase()}`}
           value={fieldValue}
           onChange={(e) => onChange(fieldId, e.target.value)}
-          onBlur={() => handleBlur(fieldId)}
+          onBlur={handleBlur}
           className={`h-11 ${errors[fieldId] ? 'border-red-500 focus:border-red-500' : ''}`}
         />
         {errors[fieldId] && (
