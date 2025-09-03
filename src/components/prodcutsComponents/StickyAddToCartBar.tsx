@@ -5,12 +5,10 @@ import type { CartesRecord, ProductsResponse } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
 import { useNavigate } from '@tanstack/react-router'
+import { usePriceCalculation } from '@/contexts/PriceCalculationContext'
 
 interface StickyAddToCartBarProps {
   product: ProductsResponse
-  quantity: number
-  stockStatus: { inStock: boolean; quantity: number }
-  totalPrice: number
   cartSettings: { cartEnabled: boolean; checkoutEnabled: boolean }
   onQuantityChange: (quantity: number) => void
   isVisible: boolean
@@ -18,14 +16,12 @@ interface StickyAddToCartBarProps {
 
 export function StickyAddToCartBar({
   product,
-  quantity,
-  stockStatus,
-  totalPrice,
   cartSettings,
   isVisible
 }: StickyAddToCartBarProps) {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const { quantity, totalPrice, stockStatus } = usePriceCalculation()
 
   const handleAddToCart = async () => {
     if (!stockStatus.inStock || quantity > stockStatus.quantity) return

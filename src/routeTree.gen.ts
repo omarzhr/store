@@ -33,10 +33,6 @@ import { Route as protectedDashboardDashboardSettingsCheckoutRouteImport } from 
 import { Route as protectedDashboardDashboardSettingsAppearanceRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/appearance'
 import { Route as protectedDashboardDashboardProductsSgfgsfgRouteImport } from './routes/(protected)/dashboard/_dashboard/products/sgfgsfg'
 import { Route as protectedDashboardDashboardProductsNewRouteImport } from './routes/(protected)/dashboard/_dashboard/products/new'
-import { Route as protectedDashboardDashboardProductsProductIdIndexRouteImport } from './routes/(protected)/dashboard/_dashboard/products/$productId/index'
-import { Route as protectedDashboardDashboardProductsProductIdEditRouteImport } from './routes/(protected)/dashboard/_dashboard/products/$productId/edit'
-import { Route as protectedDashboardDashboardProductsProductIdProductIdRouteImport } from './routes/(protected)/dashboard/_dashboard/products/$productId/$productId'
-import { Route as protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings'
 import { Route as protectedDashboardDashboardSettingsHomeComponentsFileUploadRouteImport } from './routes/(protected)/dashboard/_dashboard/settings/home/components/FileUpload'
 
 const publicRouteRoute = publicRouteRouteImport.update({
@@ -175,32 +171,6 @@ const protectedDashboardDashboardProductsNewRoute =
     path: '/products/new',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
-const protectedDashboardDashboardProductsProductIdIndexRoute =
-  protectedDashboardDashboardProductsProductIdIndexRouteImport.update({
-    id: '/_dashboard/products/$productId/',
-    path: '/products/$productId/',
-    getParentRoute: () => protectedDashboardRouteRoute,
-  } as any)
-const protectedDashboardDashboardProductsProductIdEditRoute =
-  protectedDashboardDashboardProductsProductIdEditRouteImport.update({
-    id: '/_dashboard/products/$productId/edit',
-    path: '/products/$productId/edit',
-    getParentRoute: () => protectedDashboardRouteRoute,
-  } as any)
-const protectedDashboardDashboardProductsProductIdProductIdRoute =
-  protectedDashboardDashboardProductsProductIdProductIdRouteImport.update({
-    id: '/_dashboard/products/$productId/$productId',
-    path: '/products/$productId/$productId',
-    getParentRoute: () => protectedDashboardRouteRoute,
-  } as any)
-const protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute =
-  protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRouteImport.update(
-    {
-      id: '/hooks/useHomeSettings',
-      path: '/hooks/useHomeSettings',
-      getParentRoute: () => protectedDashboardDashboardSettingsHomeRoute,
-    } as any,
-  )
 const protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute =
   protectedDashboardDashboardSettingsHomeComponentsFileUploadRouteImport.update(
     {
@@ -234,11 +204,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/orders': typeof protectedDashboardDashboardOrdersIndexRoute
   '/dashboard/products': typeof protectedDashboardDashboardProductsIndexRoute
   '/dashboard/settings': typeof protectedDashboardDashboardSettingsIndexRoute
-  '/dashboard/products/$productId/$productId': typeof protectedDashboardDashboardProductsProductIdProductIdRoute
-  '/dashboard/products/$productId/edit': typeof protectedDashboardDashboardProductsProductIdEditRoute
-  '/dashboard/products/$productId': typeof protectedDashboardDashboardProductsProductIdIndexRoute
   '/dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
-  '/dashboard/settings/home/hooks/useHomeSettings': typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
@@ -263,11 +229,7 @@ export interface FileRoutesByTo {
   '/dashboard/orders': typeof protectedDashboardDashboardOrdersIndexRoute
   '/dashboard/products': typeof protectedDashboardDashboardProductsIndexRoute
   '/dashboard/settings': typeof protectedDashboardDashboardSettingsIndexRoute
-  '/dashboard/products/$productId/$productId': typeof protectedDashboardDashboardProductsProductIdProductIdRoute
-  '/dashboard/products/$productId/edit': typeof protectedDashboardDashboardProductsProductIdEditRoute
-  '/dashboard/products/$productId': typeof protectedDashboardDashboardProductsProductIdIndexRoute
   '/dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
-  '/dashboard/settings/home/hooks/useHomeSettings': typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -295,11 +257,7 @@ export interface FileRoutesById {
   '/(protected)/dashboard/_dashboard/orders/': typeof protectedDashboardDashboardOrdersIndexRoute
   '/(protected)/dashboard/_dashboard/products/': typeof protectedDashboardDashboardProductsIndexRoute
   '/(protected)/dashboard/_dashboard/settings/': typeof protectedDashboardDashboardSettingsIndexRoute
-  '/(protected)/dashboard/_dashboard/products/$productId/$productId': typeof protectedDashboardDashboardProductsProductIdProductIdRoute
-  '/(protected)/dashboard/_dashboard/products/$productId/edit': typeof protectedDashboardDashboardProductsProductIdEditRoute
-  '/(protected)/dashboard/_dashboard/products/$productId/': typeof protectedDashboardDashboardProductsProductIdIndexRoute
   '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload': typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
-  '/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings': typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -327,11 +285,7 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/dashboard/products'
     | '/dashboard/settings'
-    | '/dashboard/products/$productId/$productId'
-    | '/dashboard/products/$productId/edit'
-    | '/dashboard/products/$productId'
     | '/dashboard/settings/home/components/FileUpload'
-    | '/dashboard/settings/home/hooks/useHomeSettings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -356,11 +310,7 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/dashboard/products'
     | '/dashboard/settings'
-    | '/dashboard/products/$productId/$productId'
-    | '/dashboard/products/$productId/edit'
-    | '/dashboard/products/$productId'
     | '/dashboard/settings/home/components/FileUpload'
-    | '/dashboard/settings/home/hooks/useHomeSettings'
   id:
     | '__root__'
     | '/(public)'
@@ -387,11 +337,7 @@ export interface FileRouteTypes {
     | '/(protected)/dashboard/_dashboard/orders/'
     | '/(protected)/dashboard/_dashboard/products/'
     | '/(protected)/dashboard/_dashboard/settings/'
-    | '/(protected)/dashboard/_dashboard/products/$productId/$productId'
-    | '/(protected)/dashboard/_dashboard/products/$productId/edit'
-    | '/(protected)/dashboard/_dashboard/products/$productId/'
     | '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload'
-    | '/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -569,34 +515,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardDashboardProductsNewRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
-    '/(protected)/dashboard/_dashboard/products/$productId/': {
-      id: '/(protected)/dashboard/_dashboard/products/$productId/'
-      path: '/products/$productId'
-      fullPath: '/dashboard/products/$productId'
-      preLoaderRoute: typeof protectedDashboardDashboardProductsProductIdIndexRouteImport
-      parentRoute: typeof protectedDashboardRouteRoute
-    }
-    '/(protected)/dashboard/_dashboard/products/$productId/edit': {
-      id: '/(protected)/dashboard/_dashboard/products/$productId/edit'
-      path: '/products/$productId/edit'
-      fullPath: '/dashboard/products/$productId/edit'
-      preLoaderRoute: typeof protectedDashboardDashboardProductsProductIdEditRouteImport
-      parentRoute: typeof protectedDashboardRouteRoute
-    }
-    '/(protected)/dashboard/_dashboard/products/$productId/$productId': {
-      id: '/(protected)/dashboard/_dashboard/products/$productId/$productId'
-      path: '/products/$productId/$productId'
-      fullPath: '/dashboard/products/$productId/$productId'
-      preLoaderRoute: typeof protectedDashboardDashboardProductsProductIdProductIdRouteImport
-      parentRoute: typeof protectedDashboardRouteRoute
-    }
-    '/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings': {
-      id: '/(protected)/dashboard/_dashboard/settings/home/hooks/useHomeSettings'
-      path: '/hooks/useHomeSettings'
-      fullPath: '/dashboard/settings/home/hooks/useHomeSettings'
-      preLoaderRoute: typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRouteImport
-      parentRoute: typeof protectedDashboardDashboardSettingsHomeRoute
-    }
     '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload': {
       id: '/(protected)/dashboard/_dashboard/settings/home/components/FileUpload'
       path: '/components/FileUpload'
@@ -635,15 +553,12 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 
 interface protectedDashboardDashboardSettingsHomeRouteChildren {
   protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute: typeof protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute
-  protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute: typeof protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute
 }
 
 const protectedDashboardDashboardSettingsHomeRouteChildren: protectedDashboardDashboardSettingsHomeRouteChildren =
   {
     protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute:
       protectedDashboardDashboardSettingsHomeComponentsFileUploadRoute,
-    protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute:
-      protectedDashboardDashboardSettingsHomeHooksUseHomeSettingsRoute,
   }
 
 const protectedDashboardDashboardSettingsHomeRouteWithChildren =
@@ -666,9 +581,6 @@ interface protectedDashboardRouteRouteChildren {
   protectedDashboardDashboardOrdersIndexRoute: typeof protectedDashboardDashboardOrdersIndexRoute
   protectedDashboardDashboardProductsIndexRoute: typeof protectedDashboardDashboardProductsIndexRoute
   protectedDashboardDashboardSettingsIndexRoute: typeof protectedDashboardDashboardSettingsIndexRoute
-  protectedDashboardDashboardProductsProductIdProductIdRoute: typeof protectedDashboardDashboardProductsProductIdProductIdRoute
-  protectedDashboardDashboardProductsProductIdEditRoute: typeof protectedDashboardDashboardProductsProductIdEditRoute
-  protectedDashboardDashboardProductsProductIdIndexRoute: typeof protectedDashboardDashboardProductsProductIdIndexRoute
 }
 
 const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren =
@@ -701,12 +613,6 @@ const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren
       protectedDashboardDashboardProductsIndexRoute,
     protectedDashboardDashboardSettingsIndexRoute:
       protectedDashboardDashboardSettingsIndexRoute,
-    protectedDashboardDashboardProductsProductIdProductIdRoute:
-      protectedDashboardDashboardProductsProductIdProductIdRoute,
-    protectedDashboardDashboardProductsProductIdEditRoute:
-      protectedDashboardDashboardProductsProductIdEditRoute,
-    protectedDashboardDashboardProductsProductIdIndexRoute:
-      protectedDashboardDashboardProductsProductIdIndexRoute,
   }
 
 const protectedDashboardRouteRouteWithChildren =

@@ -11,7 +11,7 @@ export interface CartSummary {
 }
 
 export function calculateCartSummary(
-  cartItems: CartesResponse<{ productId: ProductsResponse[] }>[],
+  cartItems: CartesResponse<unknown, { productId: ProductsResponse[] }>[],
   storeSettings: StoresResponse | null,
   shippingCost: number = 0
 ): CartSummary {

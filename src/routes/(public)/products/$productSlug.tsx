@@ -15,6 +15,7 @@ import { ImageGallery } from '@/components/prodcutsComponents/ImageGallery'
 import { ProductInfo } from '@/components/prodcutsComponents/ProductInfo'
 import { RelatedProducts } from '@/components/prodcutsComponents/RelatedProducts'
 import { StickyAddToCartBar } from '@/components/prodcutsComponents/StickyAddToCartBar'
+import { PriceCalculationProvider, usePriceCalculation } from '@/contexts/PriceCalculationContext'
 
 // Route configuration
 export const Route = createFileRoute('/(public)/products/$productSlug')({
@@ -38,31 +39,33 @@ export const Route = createFileRoute('/(public)/products/$productSlug')({
       ])
 
       // Parse checkout settings
-      const checkoutSettings = storeSettings?.checkoutSettings ? 
-        (typeof storeSettings.checkoutSettings === 'string' ? 
-          JSON.parse(storeSettings.checkoutSettings) : 
+      const checkoutSettings = storeSettings?.checkoutSettings ?
+        (typeof storeSettings.checkoutSettings === 'string' ?
+          JSON.parse(storeSettings.checkoutSettings) :
           storeSettings.checkoutSettings) : {}
 
       // Fetch related products from the same categories
-      const relatedProducts = await pb.collection(Collections.Products).getList<ProductsResponse<{
-        categories: CategoriesResponse[]
-      }>>(1, 4, {
-        filter: `id != "${product.id}" && isActive = true && (${product.categories.map(catId => `categories ~ "${catId}"`).join(' || ')})`,
-        expand: 'categories',
-        sort: '-created',
-        requestKey: `related-products-${product.id}-${Date.now()}`
-      }).catch(() => ({ items: [] }))
+      const relatedProducts = (product as any).categories && (product as any).categories.length > 0
+        ? await pb.collection(Collections.Products).getList<ProductsResponse<{
+            categories: CategoriesResponse[]
+          }>>(1, 4, {
+            filter: `id != "${product.id}" && isActive = true && (${(product as any).categories.map((catId: string) => `categories ~ "${catId}"`).join(' || ')})`,
+            expand: 'categories',
+            sort: '-created',
+            requestKey: `related-products-${product.id}-${Date.now()}`
+          }).catch(() => ({ items: [] }))
+        : { items: [] }
 
       // Build breadcrumbs
-      const categoryNames = product.expand?.categories?.map(cat => cat.name) || []
+      const categoryNames = (product.expand as { categories?: CategoriesResponse[] })?.categories?.map((cat: CategoriesResponse) => cat.name) || []
       const primaryCategory = categoryNames[0] || 'Products'
-      
+
       const breadcrumbs = [
         { label: 'Home', href: '/' },
         { label: 'Products', href: '/products' },
-        ...(categoryNames.length > 0 ? [{ 
-          label: primaryCategory, 
-          href: `/products?categories=${product.categories[0]}` 
+        ...(categoryNames.length > 0 && (product as any).categories && Array.isArray((product as any).categories) && (product as any).categories.length > 0 ? [{
+          label: primaryCategory,
+          href: `/products?categories=${(product as any).categories[0]}`
         }] : []),
         { label: product.title }
       ]
@@ -87,17 +90,17 @@ export const Route = createFileRoute('/(public)/products/$productSlug')({
 
 
 // Breadcrumbs Component
-function Breadcrumbs({ 
-  items 
-}: { 
-  items: { label: string; href?: string }[] 
+function Breadcrumbs({
+  items
+}: {
+  items: { label: string; href?: string }[]
 }) {
   return (
     <nav className="flex items-center space-x-1 text-sm text-gray-500 mb-6 overflow-x-auto scrollbar-hide">
       {items.map((item, index) => (
         <div key={index} className="flex items-center space-x-1 flex-shrink-0">
           {item.href ? (
-            <a 
+            <a
               href={item.href}
               className="hover:text-gray-700 transition-colors duration-200"
             >
@@ -118,25 +121,23 @@ function Breadcrumbs({
 }
 
 // Checkout Form Component
-function CheckoutForm({ 
-  product, 
-  quantity, 
-  totalPrice,
-  checkoutSettings 
+function CheckoutForm({
+  product,
+  checkoutSettings
 }: {
   product: ProductsResponse
-  quantity: number
-  totalPrice: number
   checkoutSettings: any
 }) {
+  const { quantity, totalPrice } = usePriceCalculation()
   const [isLoading, setIsLoading] = useState(false)
   const [orderCreated, setOrderCreated] = useState<string | null>(null)
   const [formData, setFormData] = useState<Record<string, string>>({})
-  
+
   const shippingCost = 25 // Fixed shipping cost
   const finalTotal = totalPrice + shippingCost
 
   // Get all fields from checkout settings
+  console.log("checkoutSettings", checkoutSettings)
   const allFields = checkoutSettings?.fields?.configurableFields || [
     { name: 'email', label: 'Email Address', type: 'email', required: true, placeholder: 'your@email.com' },
     { name: 'fullName', label: 'Full Name', type: 'text', required: true, placeholder: 'John Doe' },
@@ -157,7 +158,7 @@ function CheckoutForm({
 
   const handleSubmitOrder = async () => {
     setIsLoading(true)
-    
+
     try {
       // Create customer record first
       const customerData: Partial<CustomersRecord> = {
@@ -230,13 +231,13 @@ function CheckoutForm({
       }
 
       setOrderCreated(order.orderNumber || order.id)
-      
+
       console.log('Order created successfully:', {
         orderId: order.id,
         orderNumber: order.orderNumber,
         total: finalTotal
       })
-      
+
     } catch (error) {
       console.error('Failed to create order:', error)
       // Show error message to user
@@ -251,16 +252,16 @@ function CheckoutForm({
     const requiredFields = fieldsToRender
       .filter(field => field.required)
       .map(field => field.name || field.id || `field_${fieldsToRender.indexOf(field)}`)
-    
+
     console.log('Required fields:', requiredFields)
     console.log('Form data:', formData)
-    
+
     const isValid = requiredFields.every(fieldName => {
       const value = formData[fieldName]?.trim()
       console.log(`Field ${fieldName}: "${value}" - ${value ? 'filled' : 'empty'}`)
       return value
     })
-    
+
     console.log('Form is valid:', isValid)
     return isValid
   }
@@ -270,10 +271,10 @@ function CheckoutForm({
     const fieldName = field.name || field.id || `field_${index}`
     const fieldValue = formData[fieldName] || field.defaultValue || ''
     const fieldId = `field_${fieldName}_${index}`
-    
+
     // Update the field name in the fieldsToRender array to ensure consistency
     field.name = fieldName
-    
+
     switch (field.type) {
       case 'textarea':
         return (
@@ -343,7 +344,7 @@ function CheckoutForm({
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8 text-green-600" />
           </div>
-          
+
           <h3 className="text-2xl font-bold text-green-600 mb-2">
             {checkoutSettings?.messages?.thankYouMessage || 'Order Placed Successfully!'}
           </h3>
@@ -378,7 +379,7 @@ function CheckoutForm({
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Order Information</h3>
-          
+
           <div className="grid gap-4">
             {/* Dynamically render all fields */}
             {fieldsToRender.map((field, index) => {
@@ -404,13 +405,13 @@ function CheckoutForm({
           {/* Order Summary */}
           <div className="bg-gray-50 rounded-lg p-4">
             <h4 className="font-semibold mb-3">Order Summary</h4>
-            
+
             <div className="flex gap-4 mb-4">
               <img
-                src={product.featured_image ? 
-                  pb.files.getUrl(product, product.featured_image, { thumb: '150x150' }) : 
-                  (product.images && product.images.length > 0 ? 
-                    pb.files.getUrl(product, product.images[0], { thumb: '150x150' }) : 
+                src={product.featured_image ?
+                  pb.files.getUrl(product, product.featured_image, { thumb: '150x150' }) :
+                  (product.images && product.images.length > 0 ?
+                    pb.files.getUrl(product, product.images[0], { thumb: '150x150' }) :
                     'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150&h=150&fit=crop'
                   )
                 }
@@ -427,7 +428,7 @@ function CheckoutForm({
             </div>
 
             <Separator className="my-3" />
-            
+
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span>Subtotal</span>
@@ -444,8 +445,8 @@ function CheckoutForm({
             </div>
           </div>
 
-          <Button 
-            onClick={handleSubmitOrder} 
+          <Button
+            onClick={handleSubmitOrder}
             className="w-full"
             disabled={isLoading || !isFormValid()}
             style={{
@@ -469,27 +470,49 @@ function CheckoutForm({
 
 function RouteComponent() {
   const { product, relatedProducts, breadcrumbs, cartSettings, checkoutSettings } = Route.useLoaderData()
-  const [quantity, setQuantity] = useState(1)
+
+  return (
+    <PriceCalculationProvider>
+      <ProductRouteContent
+        product={product}
+        relatedProducts={relatedProducts}
+        breadcrumbs={breadcrumbs}
+        cartSettings={cartSettings}
+        checkoutSettings={checkoutSettings}
+      />
+    </PriceCalculationProvider>
+  )
+}
+
+function ProductRouteContent({
+  product,
+  relatedProducts,
+  breadcrumbs,
+  cartSettings,
+  checkoutSettings
+}: {
+  product: ProductsResponse
+  relatedProducts: ProductsResponse[]
+  breadcrumbs: any[]
+  cartSettings: any
+  checkoutSettings: any
+}) {
+  const {
+    initializeProduct,
+    setQuantity
+  } = usePriceCalculation()
   const [showStickyBar, setShowStickyBar] = useState(false)
 
-  const getCurrentPrice = () => {
-    return product.price
-  }
-
-  const getStockStatus = () => {
-    return { 
-      inStock: product.isActive && (product.stockQuantity || 0) > 0, 
-      quantity: product.stockQuantity || 0 
-    }
-  }
+  // Initialize product data when component mounts
+  useEffect(() => {
+    initializeProduct(product)
+  }, [product, initializeProduct])
 
   const handleQuantityChange = (newQuantity: number) => {
     setQuantity(newQuantity)
   }
 
-  const currentPrice = getCurrentPrice()
-  const totalPrice = currentPrice * quantity
-  const stockStatus = getStockStatus()
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -506,16 +529,15 @@ function RouteComponent() {
     <div className="min-h-screen bg-white">
       <div className="max-w-6xl mx-auto px-4 py-6 lg:py-12">
         <Breadcrumbs items={breadcrumbs} />
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           <div className="order-1">
             <ImageGallery product={product} />
           </div>
-          
+
           <div className="order-2">
             <ProductInfo
-              product={product}
-              quantity={quantity}
+              product={product as any}
               cartSettings={cartSettings}
               onQuantityChange={handleQuantityChange}
             />
@@ -524,24 +546,19 @@ function RouteComponent() {
 
         {/* Show checkout form if cart is disabled */}
         {!cartSettings.cartEnabled && (
-          <CheckoutForm 
+          <CheckoutForm
             product={product}
-            quantity={quantity}
-            totalPrice={totalPrice}
             checkoutSettings={checkoutSettings}
           />
         )}
-        
+
         <div className="mt-12 lg:mt-20">
-          <RelatedProducts products={relatedProducts} />
+          <RelatedProducts products={relatedProducts as any} />
         </div>
       </div>
 
       <StickyAddToCartBar
         product={product}
-        quantity={quantity}
-        stockStatus={stockStatus}
-        totalPrice={totalPrice}
         cartSettings={cartSettings}
         onQuantityChange={handleQuantityChange}
         isVisible={showStickyBar}

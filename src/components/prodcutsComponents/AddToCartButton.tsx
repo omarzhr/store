@@ -1,22 +1,30 @@
 import { Button } from "@/components/ui/button";
 import pb from "@/lib/db";
 import { Collections, type CartesRecord, type ProductsResponse } from "@/lib/types";
+import type { SelectedVariants, VariantPriceCalculation } from "@/lib/types/variants";
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { CheckoutModal } from "./CheckoutModal";
+import { generateVariantSku } from "@/lib/variant-utils";
 
 export default function AddToCartButton({
   product,
   quantity,
   stockStatus,
   totalPrice,
-  cartSettings
+  cartSettings,
+  selectedVariants = {},
+  variantPrice,
+  priceCalculation
 }: {
   product: ProductsResponse
   quantity: number
   stockStatus: { inStock: boolean; quantity: number }
   totalPrice: number
   cartSettings: { cartEnabled: boolean; checkoutEnabled: boolean }
+  selectedVariants?: SelectedVariants
+  variantPrice?: number
+  priceCalculation?: VariantPriceCalculation
 }) {
   const [isLoading, setIsLoading] = useState(false)
   const [showCheckout, setShowCheckout] = useState(false)
@@ -27,14 +35,25 @@ export default function AddToCartButton({
     setIsLoading(true)
     
     try {
+      console.log('AddToCart Debug:', {
+        productPrice: product.price,
+        variantPrice,
+        selectedVariants,
+        quantity,
+        totalPrice
+      })
+      
       const cartData: Partial<CartesRecord> = {
         productId: [product.id],
         productName: product.title,
         productImage: product.featured_image ? [product.featured_image] : 
                      (product.images && product.images.length > 0 ? [product.images[0]] : []),
         quantity: quantity,
-        price: totalPrice,
-        inStock: stockStatus.inStock
+        price: variantPrice || product.price,
+        inStock: stockStatus.inStock,
+        selected_variants: Object.keys(selectedVariants).length > 0 ? selectedVariants : undefined,
+        variantPrice: variantPrice || product.price,
+        variantSku: Object.keys(selectedVariants).length > 0 ? generateVariantSku(product.sku || product.id, selectedVariants) : undefined
       }
 
       await pb.collection(Collections.Cartes).create(cartData, {
@@ -97,7 +116,9 @@ export default function AddToCartButton({
         onClose={() => setShowCheckout(false)}
         product={product}
         quantity={quantity}
-        totalPrice={totalPrice}
+        selectedVariants={selectedVariants}
+        variantPrice={variantPrice}
+        priceCalculation={priceCalculation}
       />
     </>
   )

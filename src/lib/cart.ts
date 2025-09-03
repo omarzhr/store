@@ -12,7 +12,8 @@ export async function addToCart(options: AddToCartOptions) {
   try {
     // Check if item already exists in cart
     const existingItems = await pb.collection(Collections.Cartes).getFullList({
-      filter: `productId~"${options.productId}"`
+      filter: `productId~"${options.productId}"`,
+      requestKey: `check-cart-${options.productId}-${Date.now()}`
     })
 
     if (existingItems.length > 0) {
@@ -22,6 +23,8 @@ export async function addToCart(options: AddToCartOptions) {
       
       await pb.collection(Collections.Cartes).update(existingItem.id, {
         quantity: newQuantity
+      }, {
+        requestKey: `update-cart-${existingItem.id}-${Date.now()}`
       })
     } else {
       // Create new cart item
@@ -33,7 +36,9 @@ export async function addToCart(options: AddToCartOptions) {
         inStock: true
       }
 
-      await pb.collection(Collections.Cartes).create(cartData)
+      await pb.collection(Collections.Cartes).create(cartData, {
+        requestKey: `create-cart-${options.productId}-${Date.now()}`
+      })
     }
 
     return { success: true }
@@ -45,7 +50,9 @@ export async function addToCart(options: AddToCartOptions) {
 
 export async function getCartItemCount(): Promise<number> {
   try {
-    const items = await pb.collection(Collections.Cartes).getFullList<CartesResponse>()
+    const items = await pb.collection(Collections.Cartes).getFullList<CartesResponse>({
+      requestKey: `cart-count-${Date.now()}`
+    })
     return items.reduce((total, item) => total + (item.quantity || 1), 0)
   } catch (error) {
     console.error('Failed to get cart count:', error)
@@ -56,7 +63,8 @@ export async function getCartItemCount(): Promise<number> {
 export async function getCartItems() {
   try {
     return await pb.collection(Collections.Cartes).getFullList<CartesResponse>({
-      sort: '-created'
+      sort: '-created',
+      requestKey: `cart-items-${Date.now()}`
     })
   } catch (error) {
     console.error('Failed to get cart items:', error)

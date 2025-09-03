@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
 import { CreditCard, Truck, CheckCircle } from 'lucide-react'
 import type { CartesRecord, OrdersRecord, OrderItemsRecord, CustomersRecord, ProductsResponse, OrdersFulfillmentStatusOptions, OrdersPaymentStatusOptions, OrdersStatusOptions } from '@/lib/types'
+import type { SelectedVariants, VariantPriceCalculation } from '@/lib/types/variants'
 import pb from '@/lib/db'
 
 interface CheckoutModalProps {
@@ -16,7 +17,9 @@ interface CheckoutModalProps {
   onClose: () => void
   product: ProductsResponse
   quantity: number
-  totalPrice: number
+  selectedVariants?: SelectedVariants
+  variantPrice?: number
+  priceCalculation?: VariantPriceCalculation
 }
 
 export function CheckoutModal({
@@ -24,7 +27,9 @@ export function CheckoutModal({
   onClose,
   product,
   quantity,
-  totalPrice
+  selectedVariants = {},
+  variantPrice,
+  priceCalculation
 }: CheckoutModalProps) {
   const [step, setStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
@@ -49,7 +54,11 @@ export function CheckoutModal({
   const [notes, setNotes] = useState('')
   
   const shippingCost = 25 // Fixed shipping cost
-  const finalTotal = totalPrice + shippingCost
+  
+  // Use shared price calculation from ProductInfo
+  const itemPrice = priceCalculation?.finalPrice || variantPrice || product.price
+  const subtotal = itemPrice * quantity
+  const finalTotal = subtotal + shippingCost
 
   const handleNextStep = () => {
     if (step < 4) setStep(step + 1)
@@ -72,7 +81,7 @@ export function CheckoutModal({
         productImage: product.featured_image ? [product.featured_image] : 
                      (product.images && product.images.length > 0 ? [product.images[0]] : []),
         quantity: quantity,
-        price: totalPrice,
+        price: variantPrice || product.price,
         inStock: true
       }
       
@@ -95,7 +104,7 @@ export function CheckoutModal({
           phone: customerInfo.phone
         },
         shippingAddress: shippingAddress,
-        subtotal: totalPrice,
+        subtotal: subtotal,
         shipping: shippingCost,
         total: finalTotal,
         status: 'pending' as OrdersStatusOptions,
@@ -109,8 +118,8 @@ export function CheckoutModal({
       const orderItemData: Partial<OrderItemsRecord> = {
         products: [product.id],
         quantity: quantity,
-        price: totalPrice,
-        selectedVariants: null
+        price: itemPrice,
+        selectedVariants: Object.keys(selectedVariants).length > 0 ? selectedVariants : null
       }
       
       // Simulate API delay
@@ -215,7 +224,7 @@ export function CheckoutModal({
                         <div className="text-sm text-gray-600 mt-1">
                           <div>Quantity: {quantity}</div>
                         </div>
-                        <div className="font-semibold mt-2">${totalPrice.toFixed(2)}</div>
+                        <div className="font-semibold mt-2">${subtotal.toFixed(2)}</div>
                       </div>
                     </div>
                   </CardContent>
@@ -224,7 +233,7 @@ export function CheckoutModal({
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Shipping</span>
@@ -417,7 +426,7 @@ export function CheckoutModal({
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
-                        <span>${totalPrice.toFixed(2)}</span>
+                        <span>${subtotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Shipping</span>

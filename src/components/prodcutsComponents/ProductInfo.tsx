@@ -1,59 +1,56 @@
-import { useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Heart, Share2 } from 'lucide-react'
 import type { ProductsResponse, CategoriesResponse } from '@/lib/types'
+import type { SelectedVariants } from '@/lib/types/variants'
 import { QuantitySelector } from './QuantitySelector'
 import AddToCartButton from './AddToCartButton'
+import { VariantSelector } from '@/components/variants/VariantSelector'
+import { usePriceCalculation } from '@/contexts/PriceCalculationContext'
 
 interface ProductInfoProps {
   product: ProductsResponse<{ categories: CategoriesResponse[] }>
-  quantity?: number
   cartSettings: { cartEnabled: boolean; checkoutEnabled: boolean }
   onQuantityChange?: (newQuantity: number) => void
 }
 
 export function ProductInfo({ 
   product, 
-  quantity, 
   cartSettings,
-  onQuantityChange 
+  onQuantityChange
 }: ProductInfoProps) {
-  const [internalQuantity, setInternalQuantity] = useState(quantity || 1)
-  
-  // Use props if provided, otherwise use internal state
-  const currentQuantity = quantity !== undefined ? quantity : internalQuantity
-  
-  // Get current price (no variants, so use base price)
-  const getCurrentPrice = () => {
-    return product.price
-  }
-  
-  // Calculate total price based on quantity
-  const getTotalPrice = () => {
-    return getCurrentPrice() * currentQuantity
-  }
-  
-  // Check stock status
-  const getStockStatus = () => {
-    return { 
-      inStock: product.isActive && (product.stockQuantity || 0) > 0, 
-      quantity: product.stockQuantity || 0 
-    }
-  }
+  const {
+    quantity,
+    selectedVariants,
+    variantConfig,
+    setQuantity,
+    setSelectedVariants,
+    getCurrentPrice,
+    getTotalPrice,
+    stockStatus,
+    priceCalculation
+  } = usePriceCalculation()
   
   const handleQuantityChange = (newQuantity: number) => {
+    setQuantity(newQuantity)
     if (onQuantityChange) {
       onQuantityChange(newQuantity)
-    } else {
-      setInternalQuantity(newQuantity)
     }
+  }
+
+  const handleVariantChange = (variants: SelectedVariants) => {
+    setSelectedVariants(variants)
+  }
+
+  const handlePriceChange = () => {
+    // This is called by VariantSelector but we don't need to do anything
+    // since price calculation is handled by the global context
   }
   
   const currentPrice = getCurrentPrice()
   const totalPrice = getTotalPrice()
-  const stockStatus = getStockStatus()
   const hasDiscount = product.old_price && product.old_price > currentPrice
   const discountPercentage = hasDiscount && product.old_price
     ? Math.round(((product.old_price - currentPrice) / product.old_price) * 100)
@@ -63,9 +60,9 @@ export function ProductInfo({
     <div className="space-y-6">
       {/* Product Header */}
       <div className="space-y-2">
-        {product.expand?.categories && product.expand.categories.length > 0 && (
+        {(product.expand as { categories?: CategoriesResponse[] })?.categories && (product.expand as { categories?: CategoriesResponse[] }).categories!.length > 0 && (
           <Badge variant="secondary" className="text-xs">
-            {product.expand.categories[0].name}
+            {(product.expand as { categories?: CategoriesResponse[] }).categories![0].name}
           </Badge>
         )}
         <h1 className="text-2xl lg:text-4xl font-bold leading-tight">
@@ -95,18 +92,31 @@ export function ProductInfo({
         </div>
         
         {/* Total Price Display */}
-        {currentQuantity > 1 && (
+        {quantity > 1 && (
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-600">Total:</span>
             <span className="text-lg font-semibold text-primary">
               ${totalPrice.toFixed(2)}
             </span>
             <span className="text-xs text-gray-500">
-              ({currentQuantity} × ${currentPrice.toFixed(2)})
+              ({quantity} × ${currentPrice.toFixed(2)})
             </span>
           </div>
         )}
       </div>
+
+      {/* Variants Selector */}
+      {variantConfig && variantConfig.options.length > 0 && (
+        <div className="space-y-4">
+          <VariantSelector
+            config={variantConfig}
+            basePrice={product.price}
+            selectedVariants={selectedVariants}
+            onVariantChange={handleVariantChange}
+            onPriceChange={handlePriceChange}
+          />
+        </div>
+      )}
 
       {/* Stock Status */}
       <div className="flex items-center gap-2">
@@ -123,7 +133,7 @@ export function ProductInfo({
       {/* Quantity Selector - Show if in stock */}
       {stockStatus.inStock && (
         <QuantitySelector
-          quantity={currentQuantity}
+          quantity={quantity}
           maxQuantity={stockStatus.quantity}
           onQuantityChange={handleQuantityChange}
           disabled={!stockStatus.inStock}
@@ -146,10 +156,13 @@ export function ProductInfo({
         <div className="flex gap-3">
           <AddToCartButton
             product={product}
-            quantity={currentQuantity}
+            quantity={quantity}
             stockStatus={stockStatus}
             totalPrice={totalPrice}
             cartSettings={cartSettings}
+            selectedVariants={selectedVariants}
+            variantPrice={getCurrentPrice()}
+            priceCalculation={priceCalculation}
           />
           <Button variant="outline" size="lg" className="h-12 px-4">
             <Heart className="w-5 h-5" />

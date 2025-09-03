@@ -109,7 +109,7 @@ export type AnalyticsRecord<Tdata = unknown> = {
 	updated?: IsoDateString
 }
 
-export type CartesRecord = {
+export type CartesRecord<Tselected_variants = unknown> = {
 	created?: IsoDateString
 	id: string
 	inStock?: boolean
@@ -118,7 +118,10 @@ export type CartesRecord = {
 	productImage?: string[]
 	productName?: string
 	quantity?: number
+	selected_variants?: null | Tselected_variants
 	updated?: IsoDateString
+	variantPrice?: number
+	variantSku?: string
 }
 
 export type CategoriesRecord = {
@@ -274,7 +277,7 @@ export type MfasResponse<Texpand = unknown> = Required<MfasRecord> & BaseSystemF
 export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord> & BaseSystemFields<Texpand>
 export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord> & AuthSystemFields<Texpand>
 export type AnalyticsResponse<Tdata = unknown, Texpand = unknown> = Required<AnalyticsRecord<Tdata>> & BaseSystemFields<Texpand>
-export type CartesResponse<Texpand = unknown> = Required<CartesRecord> & BaseSystemFields<Texpand>
+export type CartesResponse<Tselected_variants = unknown, Texpand = unknown> = Required<CartesRecord<Tselected_variants>> & BaseSystemFields<Texpand>
 export type CategoriesResponse<Texpand = unknown> = Required<CategoriesRecord> & BaseSystemFields<Texpand>
 export type CustomersResponse<Texpand = unknown> = Required<CustomersRecord> & BaseSystemFields<Texpand>
 export type OrderItemsResponse<TselectedVariants = unknown, Texpand = unknown> = Required<OrderItemsRecord<TselectedVariants>> & BaseSystemFields<Texpand>

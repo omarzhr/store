@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Input } from '@/components/ui/input'
-import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Tag } from 'lucide-react'
+import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { 
   AlertDialog,
@@ -18,14 +17,16 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import type { CartesResponse, ProductsResponse, StoresResponse } from '@/lib/types'
+import type { SelectedVariants } from '@/lib/types/variants'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
-import { calculateCartSummary, formatPrice, type CartSummary } from '@/lib/cart-utils'
+import { calculateCartSummary, formatPrice } from '@/lib/cart-utils'
+import { VariantDisplay } from '@/components/variants/VariantDisplay'
 
 export const Route = createFileRoute('/(public)/cart/')({
   loader: async () => {
     const [cartItems, storeSettings] = await Promise.all([
-      pb.collection(Collections.Cartes).getFullList<CartesResponse<{ 
+      pb.collection(Collections.Cartes).getFullList<CartesResponse<unknown, { 
         productId: ProductsResponse[] 
       }>>(50, {
         expand: 'productId',
@@ -59,7 +60,7 @@ function RemoveItemModal({
   onConfirm,
   storeSettings
 }: { 
-  item: CartesResponse<{ productId: ProductsResponse[] }>
+  item: CartesResponse<unknown, { productId: ProductsResponse[] }>
   onConfirm: () => void
   storeSettings: StoresResponse | null
 }) {
@@ -95,6 +96,11 @@ function RemoveItemModal({
           )}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium line-clamp-1">{item.productName || product?.title}</p>
+            <VariantDisplay 
+              selectedVariants={(item.selected_variants as SelectedVariants) || {}}
+              compact={true}
+              className="mt-1"
+            />
             <div className="flex items-center gap-2 text-xs text-gray-600">
               <span>Qty: {item.quantity}</span>
               <span>•</span>
@@ -165,7 +171,7 @@ function CartItem({
   onRemove,
   storeSettings
 }: { 
-  item: CartesResponse<{ productId: ProductsResponse[] }>
+  item: CartesResponse<unknown, { productId: ProductsResponse[] }>
   onQuantityChange: (id: string, quantity: number) => void
   onRemove: (id: string) => void
   storeSettings: StoresResponse | null
@@ -236,6 +242,13 @@ function CartItem({
                 </span>
               </div>
             )}
+
+            {/* Variant Display */}
+            <VariantDisplay 
+              selectedVariants={(item.selected_variants as SelectedVariants) || {}}
+              compact={false}
+              className="mb-3"
+            />
 
             {/* Price and Quantity - Desktop Layout */}
             <div className="hidden lg:flex justify-between items-center">
@@ -355,7 +368,7 @@ function RouteComponent() {
   const [cartSummary, setCartSummary] = useState(() => 
     calculateCartSummary(initialCartItems, storeSettings)
   )
-  const [removedItem, setRemovedItem] = useState<CartesResponse<{ productId: ProductsResponse[] }> | null>(null)
+  const [removedItem, setRemovedItem] = useState<CartesResponse<unknown, { productId: ProductsResponse[] }> | null>(null)
   const [showUndoAlert, setShowUndoAlert] = useState(false)
 
   // Update cart summary when cart items change
@@ -436,7 +449,7 @@ function RouteComponent() {
         // Re-create the item in PocketBase
         const product = Array.isArray(removedItem.expand?.productId) ? removedItem.expand.productId[0] : removedItem.expand?.productId
         await pb.collection(Collections.Cartes).create({
-          productId: product?.id,
+          productId: product?.id ? [product.id] : [],
           productName: removedItem.productName,
           quantity: removedItem.quantity,
           price: removedItem.price,
@@ -446,7 +459,7 @@ function RouteComponent() {
         })
         
         // Reload cart items
-        const updatedItems = await pb.collection(Collections.Cartes).getFullList<CartesResponse<{ 
+        const updatedItems = await pb.collection(Collections.Cartes).getFullList<CartesResponse<unknown, { 
           productId: ProductsResponse[] 
         }>>(50, {
           expand: 'productId',

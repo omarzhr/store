@@ -8,8 +8,10 @@ import { ArrowLeft, Package, Upload, X } from 'lucide-react'
 import MDEditor from '@uiw/react-md-editor'
 import { Switch } from '@/components/ui/switch'
 import type { CategoriesResponse, ProductsRecord, StoresResponse } from '@/lib/types'
+import type { ProductVariantConfig } from '@/lib/types/variants'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
+import { VariantConfig } from '@/components/variants/VariantConfig'
 
 export const Route = createFileRoute('/(protected)/dashboard/_dashboard/products/new')({
   loader: async () => {
@@ -79,6 +81,7 @@ function RouteComponent() {
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false)
   const [stockQuantity, setStockQuantity] = useState<string>('0')
   const [reorderLevel, setReorderLevel] = useState<string>('0')
+  const [variantConfig, setVariantConfig] = useState<ProductVariantConfig | null>(null)
 
   // Auto-generate slug from title
   const generateSlug = (text: string): string => {
@@ -129,8 +132,7 @@ function RouteComponent() {
     setLoading(true)
     setError(null)
 
-    const form = e.currentTarget
-    const formData = new FormData(form)
+
     
     try {
       // Validate required fields
@@ -165,7 +167,8 @@ function RouteComponent() {
         isActive: isActive,
         baseCurrency: currency,
         basePrice: Number(price),
-        store: storeSettings?.id ? [storeSettings.id] : undefined
+        store: storeSettings?.id ? [storeSettings.id] : undefined,
+        variants: variantConfig ? variantConfig : undefined
       }
 
       const createFormData = new FormData()
@@ -181,7 +184,7 @@ function RouteComponent() {
               createFormData.append('store', storeId)
             })
           } else {
-            createFormData.append(key, value.toString())
+            createFormData.append(key, value?.toString() || '')
           }
         }
       })
@@ -583,6 +586,16 @@ function RouteComponent() {
                 />
               </div>
             </div>
+          </div>
+
+          {/* Product Variants Section */}
+          <div className="space-y-4">
+            <VariantConfig
+              config={variantConfig}
+              onChange={setVariantConfig}
+              basePrice={Number(price) || 0}
+              currency={currencySymbol}
+            />
           </div>
           
           {/* Product Status Section */}
