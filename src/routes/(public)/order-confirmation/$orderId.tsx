@@ -174,15 +174,20 @@ function OrderItemsList({ order }: { order: OrdersResponse<{
       <CardContent className="space-y-4">
         {orderItems.map((item: any) => {
           const product = Array.isArray(item.expand?.products) ? item.expand.products[0] : item.expand?.products
+          const getProductImage = () => {
+            if (product?.featured_image) {
+              return pb.files.getUrl(product, product.featured_image, { thumb: '64x64' })
+            }
+            if (product?.images && product.images.length > 0) {
+              return pb.files.getUrl(product, product.images[0], { thumb: '64x64' })
+            }
+            return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=64&h=64&fit=crop'
+          }
+
           return (
             <div key={item.id} className="flex gap-3">
               <img
-                src={product?.featured_image 
-                  ? `http://127.0.0.1:8090/api/files/products/${product.id}/${product.featured_image}` 
-                  : product?.images?.[0] 
-                    ? `http://127.0.0.1:8090/api/files/products/${product.id}/${product.images[0]}`
-                    : 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
-                }
+                src={getProductImage()}
                 alt={product?.title || 'Product'}
                 className="w-16 h-16 object-cover rounded border"
               />
