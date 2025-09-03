@@ -1,33 +1,29 @@
 import { Button } from "@/components/ui/button";
 import pb from "@/lib/db";
 import { Collections, type CartesRecord, type ProductsResponse } from "@/lib/types";
-import type { SelectedVariants, VariantPriceCalculation } from "@/lib/types/variants";
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { CheckoutModal } from "./CheckoutModal";
 import { generateVariantSku } from "@/lib/variant-utils";
+import { usePriceCalculation } from "@/contexts/PriceCalculationContext";
 
 export default function AddToCartButton({
   product,
-  quantity,
-  stockStatus,
-  totalPrice,
-  cartSettings,
-  selectedVariants = {},
-  variantPrice,
-  priceCalculation
+  cartSettings
 }: {
   product: ProductsResponse
-  quantity: number
-  stockStatus: { inStock: boolean; quantity: number }
-  totalPrice: number
   cartSettings: { cartEnabled: boolean; checkoutEnabled: boolean }
-  selectedVariants?: SelectedVariants
-  variantPrice?: number
-  priceCalculation?: VariantPriceCalculation
 }) {
   const [isLoading, setIsLoading] = useState(false)
   const [showCheckout, setShowCheckout] = useState(false)
+  
+  const {
+    quantity,
+    selectedVariants,
+    stockStatus,
+    totalPrice,
+    getCurrentPrice
+  } = usePriceCalculation()
 
   const handleAddToCart = async () => {
     if (!stockStatus.inStock || quantity > stockStatus.quantity) return
@@ -35,9 +31,11 @@ export default function AddToCartButton({
     setIsLoading(true)
     
     try {
+      const currentPrice = getCurrentPrice()
+      
       console.log('AddToCart Debug:', {
         productPrice: product.price,
-        variantPrice,
+        currentPrice,
         selectedVariants,
         quantity,
         totalPrice
@@ -46,13 +44,11 @@ export default function AddToCartButton({
       const cartData: Partial<CartesRecord> = {
         productId: [product.id],
         productName: product.title,
-        productImage: product.featured_image ? [product.featured_image] : 
-                     (product.images && product.images.length > 0 ? [product.images[0]] : []),
         quantity: quantity,
-        price: variantPrice || product.price,
+        price: currentPrice,
         inStock: stockStatus.inStock,
         selected_variants: Object.keys(selectedVariants).length > 0 ? selectedVariants : undefined,
-        variantPrice: variantPrice || product.price,
+        variantPrice: currentPrice,
         variantSku: Object.keys(selectedVariants).length > 0 ? generateVariantSku(product.sku || product.id, selectedVariants) : undefined
       }
 
@@ -115,10 +111,6 @@ export default function AddToCartButton({
         isOpen={showCheckout}
         onClose={() => setShowCheckout(false)}
         product={product}
-        quantity={quantity}
-        selectedVariants={selectedVariants}
-        variantPrice={variantPrice}
-        priceCalculation={priceCalculation}
       />
     </>
   )

@@ -6,6 +6,7 @@ import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
 import { useNavigate } from '@tanstack/react-router'
 import { usePriceCalculation } from '@/contexts/PriceCalculationContext'
+import { generateVariantSku } from '@/lib/variant-utils'
 
 interface StickyAddToCartBarProps {
   product: ProductsResponse
@@ -21,7 +22,7 @@ export function StickyAddToCartBar({
 }: StickyAddToCartBarProps) {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { quantity, totalPrice, stockStatus } = usePriceCalculation()
+  const { quantity, totalPrice, stockStatus, selectedVariants, getCurrentPrice } = usePriceCalculation()
 
   const handleAddToCart = async () => {
     if (!stockStatus.inStock || quantity > stockStatus.quantity) return
@@ -29,15 +30,18 @@ export function StickyAddToCartBar({
     setIsLoading(true)
     
     try {
-      // Create cart item with real product data
+      const currentPrice = getCurrentPrice()
+      
+      // Create cart item with real product data including variants
       const cartData: Partial<CartesRecord> = {
         productId: [product.id],
         productName: product.title,
-        productImage: product.featured_image ? [product.featured_image] : 
-                     (product.images && product.images.length > 0 ? [product.images[0]] : []),
         quantity: quantity,
-        price: totalPrice,
-        inStock: stockStatus.inStock
+        price: currentPrice,
+        inStock: stockStatus.inStock,
+        selected_variants: Object.keys(selectedVariants).length > 0 ? selectedVariants : undefined,
+        variantPrice: currentPrice,
+        variantSku: Object.keys(selectedVariants).length > 0 ? generateVariantSku(product.sku || product.id, selectedVariants) : undefined
       }
 
       await pb.collection(Collections.Cartes).create(cartData, {
@@ -53,7 +57,8 @@ export function StickyAddToCartBar({
         productId: product.id,
         productName: product.title,
         quantity,
-        price: totalPrice,
+        price: currentPrice,
+        selectedVariants,
         timestamp: new Date().toISOString()
       })
       
@@ -72,7 +77,7 @@ export function StickyAddToCartBar({
       search: { 
         product: product.id,
         quantity: quantity.toString(),
-        price: totalPrice.toString()
+        price: getCurrentPrice().toString()
       }
     })
   }
@@ -103,7 +108,7 @@ export function StickyAddToCartBar({
                 ${totalPrice.toFixed(2)}
                 {quantity > 1 && (
                   <span className="text-xs text-gray-500 ml-1">
-                    ({quantity} × ${(totalPrice / quantity).toFixed(2)})
+                    ({quantity} × ${getCurrentPrice().toFixed(2)})
                   </span>
                 )}
               </p>

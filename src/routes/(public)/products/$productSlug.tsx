@@ -43,7 +43,7 @@ export const Route = createFileRoute('/(public)/products/$productSlug')({
         (typeof storeSettings.checkoutSettings === 'string' ?
           JSON.parse(storeSettings.checkoutSettings) :
           storeSettings.checkoutSettings) : {}
-
+      console.log({checkoutSettings})
       // Fetch related products from the same categories
       const relatedProducts = (product as any).categories && (product as any).categories.length > 0
         ? await pb.collection(Collections.Products).getList<ProductsResponse<{
@@ -128,7 +128,18 @@ function CheckoutForm({
   product: ProductsResponse
   checkoutSettings: any
 }) {
-  const { quantity, totalPrice } = usePriceCalculation()
+  const { quantity, totalPrice, selectedVariants } = usePriceCalculation()
+  
+  // Debug: Log selected variants to understand what's happening
+  console.log('🔍 CheckoutForm Debug:', {
+    quantity,
+    totalPrice,
+    selectedVariants,
+    hasVariants: Object.keys(selectedVariants || {}).length > 0,
+    variantKeys: Object.keys(selectedVariants || {}),
+    productId: product.id,
+    productTitle: product.title
+  })
   const [isLoading, setIsLoading] = useState(false)
   const [orderCreated, setOrderCreated] = useState<string | null>(null)
   const [formData, setFormData] = useState<Record<string, string>>({})
@@ -215,11 +226,26 @@ function CheckoutForm({
 
       // Create order item record
       const orderItemData: Partial<OrderItemsRecord> = {
+        orderId: [order.id],
         products: [product.id],
         quantity: quantity,
         price: totalPrice,
-        selectedVariants: null
+        selectedVariants: Object.keys(selectedVariants || {}).length > 0 ? selectedVariants : {
+          size: 'Large',
+          color: 'Blue',
+          testVariant: 'TestValue'
+        }
       }
+
+      // Debug: Log order item data before creation
+      console.log('📦 Order Item Data:', orderItemData)
+      console.log('🎨 Selected Variants Details:', {
+        selectedVariants,
+        type: typeof selectedVariants,
+        keys: Object.keys(selectedVariants || {}),
+        values: Object.values(selectedVariants || {}),
+        stringified: JSON.stringify(selectedVariants)
+      })
 
       await pb.collection(Collections.OrderItems).create(orderItemData)
 

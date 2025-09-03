@@ -9,31 +9,31 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
 import { CreditCard, Truck, CheckCircle } from 'lucide-react'
 import type { CartesRecord, OrdersRecord, OrderItemsRecord, CustomersRecord, ProductsResponse, OrdersFulfillmentStatusOptions, OrdersPaymentStatusOptions, OrdersStatusOptions } from '@/lib/types'
-import type { SelectedVariants, VariantPriceCalculation } from '@/lib/types/variants'
+
 import pb from '@/lib/db'
+import { usePriceCalculation } from '@/contexts/PriceCalculationContext'
 
 interface CheckoutModalProps {
   isOpen: boolean
   onClose: () => void
   product: ProductsResponse
-  quantity: number
-  selectedVariants?: SelectedVariants
-  variantPrice?: number
-  priceCalculation?: VariantPriceCalculation
 }
 
 export function CheckoutModal({
   isOpen,
   onClose,
-  product,
-  quantity,
-  selectedVariants = {},
-  variantPrice,
-  priceCalculation
+  product
 }: CheckoutModalProps) {
   const [step, setStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [orderCreated, setOrderCreated] = useState<string | null>(null)
+  
+  const {
+    quantity,
+    selectedVariants,
+    getCurrentPrice,
+    totalPrice
+  } = usePriceCalculation()
   
   // Form data
   const [customerInfo, setCustomerInfo] = useState({
@@ -55,9 +55,9 @@ export function CheckoutModal({
   
   const shippingCost = 25 // Fixed shipping cost
   
-  // Use shared price calculation from ProductInfo
-  const itemPrice = priceCalculation?.finalPrice || variantPrice || product.price
-  const subtotal = itemPrice * quantity
+  // Use shared price calculation from global context
+  const itemPrice = getCurrentPrice()
+  const subtotal = totalPrice
   const finalTotal = subtotal + shippingCost
 
   const handleNextStep = () => {
@@ -78,10 +78,8 @@ export function CheckoutModal({
       const cartData: Partial<CartesRecord> = {
         productId: [product.id],
         productName: product.title,
-        productImage: product.featured_image ? [product.featured_image] : 
-                     (product.images && product.images.length > 0 ? [product.images[0]] : []),
         quantity: quantity,
-        price: variantPrice || product.price,
+        price: itemPrice,
         inStock: true
       }
       
@@ -116,6 +114,7 @@ export function CheckoutModal({
       
       // 4. Create order items
       const orderItemData: Partial<OrderItemsRecord> = {
+        orderId: [`ord_${Date.now()}`], // Will be replaced with actual order.id when real API is implemented
         products: [product.id],
         quantity: quantity,
         price: itemPrice,

@@ -29,9 +29,18 @@ export function ProductInfo({
     setSelectedVariants,
     getCurrentPrice,
     getTotalPrice,
-    stockStatus,
-    priceCalculation
+    stockStatus
   } = usePriceCalculation()
+  
+  // Debug: Log variant state to understand what's happening
+  console.log('🎯 ProductInfo Debug:', {
+    product: product.title,
+    hasVariantConfig: !!variantConfig,
+    variantConfigOptions: variantConfig?.options?.length || 0,
+    selectedVariants,
+    selectedVariantsKeys: Object.keys(selectedVariants || {}),
+    selectedVariantsCount: Object.keys(selectedVariants || {}).length
+  })
   
   const handleQuantityChange = (newQuantity: number) => {
     setQuantity(newQuantity)
@@ -41,6 +50,7 @@ export function ProductInfo({
   }
 
   const handleVariantChange = (variants: SelectedVariants) => {
+    console.log('🎨 ProductInfo: Variant selection changed:', variants)
     setSelectedVariants(variants)
   }
 
@@ -156,13 +166,7 @@ export function ProductInfo({
         <div className="flex gap-3">
           <AddToCartButton
             product={product}
-            quantity={quantity}
-            stockStatus={stockStatus}
-            totalPrice={totalPrice}
             cartSettings={cartSettings}
-            selectedVariants={selectedVariants}
-            variantPrice={getCurrentPrice()}
-            priceCalculation={priceCalculation}
           />
           <Button variant="outline" size="lg" className="h-12 px-4">
             <Heart className="w-5 h-5" />

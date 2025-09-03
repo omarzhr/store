@@ -20,24 +20,21 @@ import {
   AlertCircle, Package, Phone, MapPin, Eye, MoreVertical, Download, Printer, MessageSquare, 
   Clock, Truck, CheckCircle, XCircle, Search, Filter, RefreshCw, AlertTriangle, Calendar, 
   User, CreditCard, FileText, Edit3, ChevronDown, FileDown, FileSpreadsheet, Plus,
-  Archive, Trash2, Send, DollarSign, TrendingUp, TrendingDown, BarChart3
+  Archive, Trash2, Send, DollarSign, TrendingUp, TrendingDown, BarChart3, Bug
 } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import type { OrdersResponse, OrderItemsResponse, ProductsResponse, CustomersResponse, StoresResponse, OrdersStatusOptions, OrdersPaymentStatusOptions, OrdersFulfillmentStatusOptions } from '@/lib/types'
 import { Collections } from '@/lib/types'
 import pb from '@/lib/db'
+import { OrderItemsDebug } from '@/components/debug/OrderItemsDebug'
+import { OrderItemsList } from '@/components/orders/OrderItemsList'
 
 export const Route = createFileRoute('/(protected)/dashboard/_dashboard/orders/')({
   loader: async () => {
     try {
       const [ordersResult, storeSettings] = await Promise.all([
-        pb.collection(Collections.Orders).getFullList<OrdersResponse<any, any, {
-          customerId: CustomersResponse[],
-          'order_items(orderId)': OrderItemsResponse<any, {
-            productId: ProductsResponse[]
-          }>[]
-        }>>(200, {
-          expand: 'customerId,order_items(orderId).productId',
+        pb.collection(Collections.Orders).getFullList<OrdersResponse>(200, {
+          expand: 'customerId',
           sort: '-created',
           requestKey: `orders-list-${Date.now()}`
         }).then(orders => ({ orders, hasPermission: true }))
@@ -94,6 +91,7 @@ function RouteComponent() {
   const [showBulkActions, setShowBulkActions] = useState(false)
   const [sortBy, setSortBy] = useState<string>('newest')
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
+  const [showDebug, setShowDebug] = useState(false)
 
   // Get currency info from store settings
   const currency = storeSettings?.currency || 'MAD'
@@ -806,6 +804,30 @@ function RouteComponent() {
             </CardContent>
           </Card>
 
+          {/* Debug Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Bug className="h-5 w-5" />
+                  Debug Tools
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowDebug(!showDebug)}
+                >
+                  {showDebug ? 'Hide' : 'Show'} Debug Analysis
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            {showDebug && (
+              <CardContent>
+                <OrderItemsDebug />
+              </CardContent>
+            )}
+          </Card>
+
           {/* Enhanced Order Details Dialog */}
           <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
             <DialogContent className="max-w-5xl max-h-[95vh] p-0">
@@ -949,77 +971,11 @@ function RouteComponent() {
                     </TabsContent>
 
                     <TabsContent value="items" className="space-y-4">
-                      {/* Order Items */}
-                      <Card>
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-base">Order Items</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3 sm:space-y-4">
-                            {(selectedOrder.expand as any)?.['order_items(orderId)']?.map((item: OrderItemsResponse<any, any>) => {
-                              const product = Array.isArray(item.expand?.productId) ? item.expand.productId[0] : item.expand?.productId
-                              return (
-                                <div key={item.id} className="flex items-start gap-3 sm:gap-4 p-3 border rounded-lg">
-                                  {product?.featured_image ? (
-                                    <img
-                                      src={pb.files.getUrl(product, product.featured_image, { thumb: '60x60' })}
-                                      alt={item.productName || product.title}
-                                      className="h-12 w-12 sm:h-16 sm:w-16 object-cover rounded"
-                                    />
-                                  ) : (
-                                    <div className="h-12 w-12 sm:h-16 sm:w-16 bg-gray-200 rounded flex items-center justify-center">
-                                      <Package className="h-4 w-4 sm:h-6 sm:w-6 text-gray-400" />
-                                    </div>
-                                  )}
-                                  <div className="flex-1 min-w-0">
-                                    <div className="font-medium text-sm">{item.productName || product?.title}</div>
-                                    <div className="text-xs sm:text-sm text-muted-foreground">
-                                      Qty: {item.quantity} × {formatPrice(item.price || 0)}
-                                    </div>
-                                    {item.selectedVariants && (
-                                      <div className="text-xs text-muted-foreground mt-1">
-                                        {typeof item.selectedVariants === 'object' 
-                                          ? Object.entries(item.selectedVariants as Record<string, any>)
-                                              .map(([key, value]) => `${key}: ${value}`)
-                                              .join(', ')
-                                        : JSON.stringify(item.selectedVariants)
-                                        }
-                                      </div>
-                                    )}
-                                  </div>
-                                  <div className="font-medium text-sm">
-                                    {formatPrice((item.price || 0) * (item.quantity || 1))}
-                                  </div>
-                                </div>
-                              )
-                            }) || (
-                              <div className="text-center py-6 text-muted-foreground">
-                                <Package className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                                <p className="text-sm">No order items found</p>
-                              </div>
-                            )}
-                          </div>
-
-                          <Separator className="my-4" />
-
-                          {/* Order Summary */}
-                          <div className="space-y-2 max-w-sm ml-auto">
-                            <div className="flex justify-between text-sm">
-                              <span>Subtotal</span>
-                              <span>{formatPrice(selectedOrder.subtotal || 0)}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span>Shipping</span>
-                              <span>{formatPrice(selectedOrder.shipping || 0)}</span>
-                            </div>
-                            <Separator />
-                            <div className="flex justify-between font-medium">
-                              <span>Total</span>
-                              <span>{formatPrice(selectedOrder.total || 0)}</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                      {/* Order Items - Using new direct query component */}
+                      <OrderItemsList 
+                        order={selectedOrder} 
+                        formatPrice={formatPrice} 
+                      />
 
                       {/* COD Information */}
                       <Alert>

@@ -358,13 +358,27 @@ function RouteComponent() {
       for (const cartItem of cartItems) {
         const productId = Array.isArray(cartItem.productId) ? cartItem.productId[0] : cartItem.productId
         
+        // Debug: Log cart item to order item conversion
+        console.log('🔄 Converting cart item to order item:', {
+          cartItemId: cartItem.id,
+          productId: productId,
+          quantity: cartItem.quantity,
+          price: cartItem.price,
+          cartVariants: cartItem.selected_variants,
+          variantType: typeof cartItem.selected_variants,
+          hasVariants: !!cartItem.selected_variants
+        })
+        
         const orderItemData: Partial<OrderItemsRecord> = {
           orderId: [order.id],
           products: productId ? [productId] : undefined,
           quantity: cartItem.quantity || 1,
           price: cartItem.price || 0,
-          // selectedVariants: cartItem.selectedVariants || null
+          selectedVariants: cartItem.selected_variants || null
         }
+
+        // Debug: Log order item data before creation
+        console.log('📦 Order item data to be created:', orderItemData)
 
         await pb.collection(Collections.OrderItems).create(orderItemData, {
           requestKey: `create-order-item-${order.id}-${Date.now()}`
